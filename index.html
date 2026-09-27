@@ -1,751 +1,109 @@
-
-<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BellApp 8.0 Share</title>
+<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BellApp Dono Único</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,sans-serif;cursor:pointer}
-body{background:#000;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.top{height:52px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;border-bottom:1px solid #1a1a1a}
-.screen{flex:1;overflow:hidden;position:relative}.page{display:none;height:100%;overflow-y:auto}.page.active{display:flex;flex-direction:column}
-.bottom{height:68px;background:#000;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;align-items:center;padding-bottom:6px}
-.b-item{color:#666;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}.b-item.on{color:#fff}.b-item i{font-size:26px;font-style:normal}
-.b-item.plus i{background:#fff;color:#000;width:44px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900}
-.auth{position:fixed;inset:0;background:#000;z-index:999;padding:18px;overflow-y:auto}
-.input{width:100%;background:#121212;border:1px solid #2a2a2a;color:#fff;padding:14px;border-radius:12px;margin-top:12px;font-size:16px}
-.btn{background:#fff;color:#000;border:0;padding:14px;border-radius:28px;font-weight:800;width:100%;margin-top:14px}
-.btn2{background:#121212;border:1px solid #333;color:#fff;padding:12px;border-radius:28px;width:100%;margin-top:10px}
-.tab{display:flex;gap:8px;margin-top:12px}.tab div{flex:1;padding:10px;text-align:center;border-radius:20px;background:#111;border:1px solid #222;font-size:12px}.tab div.on{background:#fff;color:#000;font-weight:800}
-.editBtn{background:#1a1a1a;border:1px solid #333;color:#fff;padding:8px 18px;border-radius:8px;font-weight:700;font-size:13px}
-.follow{background:#fff;color:#000;border:0;padding:8px 20px;border-radius:8px;font-weight:800}.follow.following{background:#2a2a2a;color:#fff;border:1px solid #333}
-.v-badge{width:18px;height:18px;background:#20D5EC;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900;margin-left:4px}
-.story-ring{padding:3px;background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);border-radius:50%;display:inline-block}
-.video-card{width:100%;height:80vh;background:#0a0a0a;position:relative;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #111;flex-shrink:0}
-.video-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#111}
-.video-thumb{background:#111;aspect-ratio:9/14;display:flex;align-items:center;justify-content:center;color:#666}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:300;display:none;align-items:flex-end}.modal-box{background:#121212;width:100%;border-radius:24px 24px 0 0;padding:20px;max-height:92vh;overflow-y:auto}
-.opt{padding:14px;background:#1a1a1a;border-radius:12px;margin-top:10px;display:flex;justify-content:space-between;border:1px solid #333}
-.step{display:none}.step.on{display:block}
-.story-bar{display:flex;gap:12px;padding:12px;overflow-x:auto;border-bottom:1px solid #111}.story-item{display:flex;flex-direction:column;align-items:center;min-width:64px}
-.action-col{position:absolute;right:10px;bottom:90px;display:flex;flex-direction:column;gap:18px;align-items:center}
-.act-btn{display:flex;flex-direction:column;align-items:center;font-size:11px;color:#fff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none}body{margin:0;background:#000;color:#fff;font-family:system-ui}
+.input,select{width:100%;padding:14px;border-radius:12px;margin-top:10px;background:#151515;border:1px solid #333;color:#fff;font-size:16px}
+.btn{width:100%;padding:15px;border-radius:30px;background:#fff;color:#000;font-weight:900;border:0;margin-top:12px;font-size:16px}
+.btn2{width:100%;padding:12px;border-radius:30px;background:#222;color:#fff;border:1px solid #444;font-weight:700;margin-top:8px}
+.box{border:1px solid #222;border-radius:16px;padding:14px;margin-top:14px;background:#0a0a0a}
+.s{font-size:11px;color:#777;text-transform:uppercase}
+.tabs{display:flex;gap:8px;margin-top:10px}.tabs div{flex:1;padding:10px;text-align:center;border:1px solid #333;border-radius:20px;cursor:pointer}.tabs div.on{background:#fff;color:#000;font-weight:900}
+#auth{padding:16px;min-height:100vh}#app{display:none;height:100vh;flex-direction:column}
+.top{height:54px;display:flex;justify-content:space-between;align-items:center;padding:0 16px;border-bottom:1px solid #1a1a1a}
+.screen{flex:1;overflow-y:auto}.bottom{height:66px;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;align-items:center;background:#000}
+.b{color:#666;text-align:center;flex:1;cursor:pointer}.b.on{color:#fff}
+.page{display:none;padding:16px}.page.on{display:block}
+.vcard{background:#111;border-radius:16px;padding:12px;margin-top:12px;border:1px solid #1a1a1a}
+.act{cursor:pointer;padding:8px 10px;border:1px solid #222;border-radius:20px;background:#111}
 </style></head><body>
-<div class="top"><b onclick="showP('home')">BellApp 🔔</b><div><span style="padding:8px" onclick="openSearch()">🔍</span><span style="padding:8px" onclick="showP('msg')">💬</span></div></div>
-<div class="screen">
-<div id="p-home" class="page active"></div>
-<div id="p-relogio" class="page"><div style="padding:16px"><h3>Relógio</h3></div><div id="relogioList"></div></div>
-<div id="p-msg" class="page"><div style="padding:16px"><h3>Mensagens</h3></div><div id="mList"></div></div>
-<div id="p-profile" class="page"><div id="profView"></div></div>
-</div>
-<div class="bottom">
-<div class="b-item on" id="b-home" onclick="showP('home')"><i>⌂</i><small>Casinha</small></div>
-<div class="b-item" id="b-relogio" onclick="showP('relogio')"><i>◷</i><small>Relógio</small></div>
-<div class="b-item" onclick="openPublish()"><div class="plus"><i>+</i></div></div>
-<div class="b-item" id="b-profile" onclick="viewOwn()"><i>👤</i><small>Eu</small></div><!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>BellApp 8.2 No Blue</title>
-<style>
-html{-webkit-tap-highlight-color:rgba(0,0,0,0)!important;background:#000}
-body{background:#000;color:#fff;margin:0;height:100vh;display:flex;flex-direction:column;overflow:hidden;font-family:system-ui;-webkit-tap-highlight-color:rgba(0,0,0,0)!important;-webkit-user-select:none;user-select:none;touch-action:manipulation}
-*{ -webkit-tap-highlight-color:rgba(0,0,0,0)!important; -webkit-focus-ring-color:rgba(0,0,0,0)!important; outline:0!important; box-sizing:border-box; margin:0; padding:0 }
-a,button,div,span,input,select,label{ -webkit-tap-highlight-color:rgba(0,0,0,0)!important }
-button:active, div:active{ background:inherit!important; filter:brightness(1.1) }
-.top{height:52px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;border-bottom:1px solid #222;z-index:10}
-.screen{flex:1;overflow:hidden;position:relative}.page{display:none;height:100%;overflow-y:auto}.page.active{display:flex;flex-direction:column}
-.bottom{height:68px;background:#000;border-top:1px solid #222;display:flex;justify-content:space-around;align-items:center;padding-bottom:6px}
-.b-item{color:#666;text-align:center;flex:1;padding:10px}.b-item.on{color:#fff}
-.b-item.plus i{background:#fff;color:#000;width:44px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900}
-.auth{position:fixed;inset:0;background:#000;z-index:9999;padding:18px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.input{width:100%;background:#111;border:1px solid #333;color:#fff;padding:15px;border-radius:12px;margin-top:12px;font-size:16px}
-.input:focus{border-color:#555;background:#151515}
-.btn{background:#fff;color:#000;border:0;padding:15px;border-radius:28px;font-weight:800;width:100%;margin-top:14px;font-size:16px}
-.btn:active{background:#ddd!important}
-.btn2{background:#111;border:1px solid #333;color:#fff;padding:12px;border-radius:28px;width:100%;margin-top:10px}
-.tab{display:flex;gap:8px;margin-top:12px}.tab div{flex:1;padding:10px;text-align:center;border-radius:20px;background:#111;border:1px solid #222}.tab div.on{background:#fff;color:#000;font-weight:800}
-.step-box{border:1px solid #222;border-radius:16px;padding:12px;margin-top:12px;background:#0a0a0a}
-.step-box.done{border-color:#20D5EC;background:#0a1010}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:500;display:none}.modal.show{display:flex;align-items:flex-end}.modal-box{background:#111;width:100%;border-radius:24px 24px 0 0;padding:20px;max-height:92vh;overflow-y:auto}
-</style></head><body>
-<div class="top"><b id="logoHome">BellApp 🔔</b><div><span id="btnLupa" style="padding:12px">🔍</span><span id="btnMsg" style="padding:12px">💬</span></div></div>
-<div class="screen"><div id="p-home" class="page active"></div><div id="p-profile" class="page"><div id="profView"></div></div></div>
-<div class="bottom">
-<div class="b-item on" id="b-home"><i>⌂</i><br><small>Casinha</small></div>
-<div class="b-item" id="b-relogio"><i>◷</i><br><small>Relógio</small></div>
-<div class="b-item" id="b-plus"><div class="plus"><i>+</i></div></div>
-<div class="b-item" id="b-profile"><i>👤</i><br><small>Eu</small></div>
-</div>
 
-<div id="auth" class="auth">
-<h2>BellApp 8.2</h2>
+<div id="auth">
+<h2>BellApp 🔔 - Só 1 Dono</h2>
+<p style="font-size:12px;color:#666">Selo original TikTok ✓ grátis pro dono 869116478. Outros precisam 10k seguidores. Ninguém pode ser dono além de 869116478</p>
 
-<div id="s1" class="step-box done"><small style="color:#20D5EC">1º PASSO - SELO ORIGINAL</small><p>👑 Selo original só uma vez - dono 869116478 já tem 15k e selo azul ✓ - clica pra avançar</p></div>
-
-<div id="s2" class="step-box"><small style="color:#666">2º PASSO - NOME (3 meses)</small><input id="nomeConta" class="input" placeholder="Escreve teu nome aqui - ex: Beljo" autocomplete="off"></div>
-
-<div id="s3" class="step-box"><small style="color:#666">3º PASSO - TODOS PAÍSES</small><div style="display:flex;gap:8px;margin-top:8px"><select id="cc" class="input" style="width:150px;margin:0;font-size:12px"><option value="+258">🇲🇿 +258 MZ</option><option value="+1">🇺🇸 +1 USA</option><option value="+55">🇧🇷 +55 BR</option><option value="+351">🇵🇹 +351 PT</option><option value="+244">🇦🇴 +244 AO</option><option value="+27">🇿🇦 +27 ZA</option><option value="+44">🇬🇧 +44 UK</option><option value="+33">🇫🇷 +33 FR</option><option value="+49">🇩🇪 +49 DE</option><option value="+34">🇪🇸 +34 ES</option><option value="+39">🇮🇹 +39 IT</option><option value="+91">🇮🇳 +91 IN</option><option value="+86">🇨🇳 +86 CN</option><option value="+81">🇯🇵 +81 JP</option><option value="+7">🇷🇺 +7 RU</option><option value="+234">🇳🇬 +234 NG</option><option value="+254">🇰🇪 +254 KE</option><option value="+255">🇹🇿 +255 TZ</option><option value="+260">🇿🇲 +260 ZM</option><option value="+263">🇿🇼 +263 ZW</option><option value="+93">🇦🇫 +93</option><option value="+355">🇦🇱 +355</option><option value="+213">🇩🇿 +213</option><option value="+54">🇦🇷 +54</option><option value="+61">🇦🇺 +61</option><option value="+32">🇧🇪 +32</option><option value="+57">🇨🇴 +57</option><option value="+20">🇪🇬 +20</option><option value="+62">🇮🇩 +62</option><option value="+52">🇲🇽 +52</option><option value="+212">🇲🇦 +212</option><option value="+966">🇸🇦 +966</option><option value="+90">🇹🇷 +90</option><option value="+971">🇦🇪 +971</option></select><input id="phone" class="input" style="flex:1;margin:0" placeholder="Número" inputmode="numeric"></div></div>
-
-<div id="s4" class="step-box"><small style="color:#666">4º PASSO - EMAIL OU NÚMERO</small><div style="display:flex;gap:8px;margin-top:8px"><div id="tabPhone" class="tab" style="flex:1;justify-content:center;background:#fff;color:#000;border-radius:20px;padding:10px;font-size:12px">📱 Número</div><div id="tabEmail" class="tab" style="flex:1;justify-content:center;background:#111;border-radius:20px;padding:10px;font-size:12px">📧 Email</div></div><input id="email" class="input" placeholder="Ou escreve email" style="display:none"></div>
-
-<div id="s5" class="step-box"><small style="color:#666">5º PASSO - SENHA + FOTO + PARTILHA</small><input id="pass" class="input" type="password" placeholder="Senha letras+números"><div style="margin-top:12px;display:flex;gap:10px;align-items:center"><img id="prevAv" style="width:56px;height:56px;border-radius:50%;background:#111;object-fit:cover;display:none"><label style="background:#111;border:1px dashed #333;padding:10px 14px;border-radius:20px;font-size:13px;color:#aaa">📷 Foto obrigatória<input id="foto" type="file" accept="image/*" hidden></label></div></div>
-
-<p id="err" style="color:#ff4d4d;display:none;margin-top:10px"></p>
-<button type="button" class="btn" id="btnCriar">6º CRIAR CONTA - CLICA AQUI PRA AVANÇAR</button>
-</div>
-
-<script>
-const DONO='869116478';
-let modo='phone',fotoBase=null,shareId=null;
-let users=JSON.parse(localStorage.getItem('bell_users8')||'[]');
-let user=JSON.parse(localStorage.getItem('bell_u8')||'null');
-let videos=JSON.parse(localStorage.getItem('bell_vids8')||'[]');
-
-function setTab(t){
- modo=t;
- document.getElementById('tabPhone').style.background=t=='phone'?'#fff':'#111';
- document.getElementById('tabPhone').style.color=t=='phone'?'#000':'#fff';
- document.getElementById('tabEmail').style.background=t=='email'?'#fff':'#111';
- document.getElementById('tabEmail').style.color=t=='email'?'#000':'#fff';
- document.getElementById('email').style.display=t=='email'?'block':'none';
- document.getElementById('cc').parentElement.style.display=t=='email'?'none':'flex';
- checkSteps();
-}
-function checkSteps(){
- let nome=document.getElementById('nomeConta').value.trim();
- if(nome) document.getElementById('s2').classList.add('done'); else document.getElementById('s2').classList.remove('done');
- let ph=document.getElementById('phone').value.trim();
- let em=document.getElementById('email').value.trim();
- if((modo=='phone'&&ph.length>=8)||(modo=='email'&&em.includes('@'))){document.getElementById('s3').classList.add('done');document.getElementById('s4').classList.add('done');}
- let pw=document.getElementById('pass').value;
- if(pw.length>=6&&fotoBase){document.getElementById('s5').classList.add('done');}
-}
-
-document.getElementById('tabPhone').addEventListener('click',()=>setTab('phone'));
-document.getElementById('tabEmail').addEventListener('click',()=>setTab('email'));
-document.getElementById('nomeConta').addEventListener('input',checkSteps);
-document.getElementById('phone').addEventListener('input',checkSteps);
-document.getElementById('email').addEventListener('input',checkSteps);
-document.getElementById('pass').addEventListener('input',checkSteps);
-document.getElementById('foto').addEventListener('change',e=>{
- let f=e.target.files[0]; if(!f)return;
- let r=new FileReader(); r.onload=ev=>{fotoBase=ev.target.result; let im=document.getElementById('prevAv'); im.src=fotoBase; im.style.display='block'; checkSteps();}; r.readAsDataURL(f);
-});
-document.getElementById('s1').addEventListener('click',()=>{document.getElementById('nomeConta').focus();});
-
-document.getElementById('btnCriar').addEventListener('click',()=>{
- let nome=document.getElementById('nomeConta').value.trim();
- let ph=document.getElementById('phone').value.replace(/\D/g,'');
- let em=document.getElementById('email').value.trim().toLowerCase();
- let pw=document.getElementById('pass').value;
- let er=document.getElementById('err');
- let cc=document.getElementById('cc').value;
- er.style.display='none';
- if(!nome){er.textContent='Escreve nome primeiro (passo 2)';er.style.display='block';document.getElementById('nomeConta').focus();return;}
- if(!fotoBase){er.textContent='Coloca foto (passo 5)';er.style.display='block';return;}
- if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){er.textContent='Senha letras+números min 6';er.style.display='block';return;}
- let full='',idc='';
- if(modo=='email'){
-  if(!em.includes('@')){er.textContent='Email inválido';er.style.display='block';return;}
-  full=em;idc=em;
- }else{
-  if(ph.length<8){er.textContent='Número inválido';er.style.display='block';return;}
-  if(ph.includes(DONO)&&users.some(u=>u.full.replace(/\D/g,'').includes(DONO))){er.textContent='869116478 já é do dono';er.style.display='block';return;}
-  full=cc+' '+ph;idc=ph;
- }
- let novo={id:Date.now(),name:nome,full:full,idContato:idc,pass:pw,foto:fotoBase,owner:ph.includes(DONO),followers:ph.includes(DONO)?15000:80,following:0,bio:'',nomeChangedAt:Date.now()};
- users=users.filter(u=>u.idContato!=idc);users.push(novo);
- localStorage.setItem('bell_users8',JSON.stringify(users));
- user=novo; localStorage.setItem('bell_u8',JSON.stringify(user));
- document.getElementById('auth').style.display='none';
- alert('Conta criada! Agora posts com partilhar funcionam. Selo original: '+(novo.owner?'SIM 👑':'Precisa 10k'));
- location.reload();
-});
-
-if(user){document.getElementById('auth').style.display='none';}
-
-// Anti-blue fix extra
-document.addEventListener('touchstart', function(e){ e.target.style.webkitTapHighlightColor='rgba(0,0,0,0)'; }, {passive:true});
-document.addEventListener('contextmenu', e=>e.preventDefault());
-</script>
-</body></html>
-</div>
-
-<div id="auth" class="auth">
-<h1>BellApp 🔔</h1>
-<div class="tab"><div id="tabPhone" class="on" onclick="setTab('phone')">📱 Número</div><div id="tabEmail" onclick="setTab('email')">📧 Email</div></div>
-<input id="nomeConta" class="input" placeholder="Nome da conta" maxlength="20">
-<div id="boxPhone"><div style="display:flex;gap:8px;margin-top:12px">
-<select id="cc" class="input" style="width:150px;margin:0;font-size:12px">
-<option value="+258">🇲🇿 +258 MZ</option>
-<option value="+1">🇺🇸 +1 USA</option>
-<option value="+55">🇧🇷 +55 BR</option>
-<option value="+351">🇵🇹 +351 PT</option>
-<option value="+244">🇦🇴 +244 AO</option>
-<option value="+27">🇿🇦 +27 ZA</option>
-<option value="+44">🇬🇧 +44 UK</option>
-<option value="+33">🇫🇷 +33 FR</option>
-<option value="+49">🇩🇪 +49 DE</option>
-<option value="+34">🇪🇸 +34 ES</option>
-<option value="+39">🇮🇹 +39 IT</option>
-<option value="+91">🇮🇳 +91 IN</option>
-<option value="+86">🇨🇳 +86 CN</option>
-<option value="+81">🇯🇵 +81 JP</option>
-<option value="+7">🇷🇺 +7 RU</option>
-<option value="+234">🇳🇬 +234 NG</option>
-<option value="+254">🇰🇪 +254 KE</option>
-<option value="+255">🇹🇿 +255 TZ</option>
-<option value="+256">🇺🇬 +256 UG</option>
-<option value="+260">🇿🇲 +260 ZM</option>
-<option value="+263">🇿🇼 +263 ZW</option>
-<option value="+93">🇦🇫 +93 AF</option>
-<option value="+355">🇦🇱 +355 AL</option>
-<option value="+213">🇩🇿 +213 DZ</option>
-<option value="+376">🇦🇩 +376 AD</option>
-<option value="+54">🇦🇷 +54 AR</option>
-<option value="+374">🇦🇲 +374 AM</option>
-<option value="+61">🇦🇺 +61 AU</option>
-<option value="+43">🇦🇹 +43 AT</option>
-<option value="+994">🇦🇿 +994 AZ</option>
-<option value="+973">🇧🇭 +973 BH</option>
-<option value="+880">🇧🇩 +880 BD</option>
-<option value="+375">🇧🇾 +375 BY</option>
-<option value="+32">🇧🇪 +32 BE</option>
-<option value="+501">🇧🇿 +501 BZ</option>
-<option value="+229">🇧🇯 +229 BJ</option>
-<option value="+975">🇧🇹 +975 BT</option>
-<option value="+591">🇧🇴 +591 BO</option>
-<option value="+387">🇧🇦 +387 BA</option>
-<option value="+267">🇧🇼 +267 BW</option>
-<option value="+673">🇧🇳 +673 BN</option>
-<option value="+359">🇧🇬 +359 BG</option>
-<option value="+226">🇧🇫 +226 BF</option>
-<option value="+257">🇧🇮 +257 BI</option>
-<option value="+855">🇰🇭 +855 KH</option>
-<option value="+237">🇨🇲 +237 CM</option>
-<option value="+1">🇨🇦 +1 CA</option>
-<option value="+238">🇨🇻 +238 CV</option>
-<option value="+56">🇨🇱 +56 CL</option>
-<option value="+57">🇨🇴 +57 CO</option>
-<option value="+242">🇨🇬 +242 CG</option>
-<option value="+506">🇨🇷 +506 CR</option>
-<option value="+385">🇭🇷 +385 HR</option>
-<option value="+53">🇨🇺 +53 CU</option>
-<option value="+357">🇨🇾 +357 CY</option>
-<option value="+420">🇨🇿 +420 CZ</option>
-<option value="+45">🇩🇰 +45 DK</option>
-<option value="+253">🇩🇯 +253 DJ</option>
-<option value="+593">🇪🇨 +593 EC</option>
-<option value="+20">🇪🇬 +20 EG</option>
-<option value="+503">🇸🇻 +503 SV</option>
-<option value="+372">🇪🇪 +372 EE</option>
-<option value="+251">🇪🇹 +251 ET</option>
-<option value="+358">🇫🇮 +358 FI</option>
-<option value="+241">🇬🇦 +241 GA</option>
-<option value="+220">🇬🇲 +220 GM</option>
-<option value="+995">🇬🇪 +995 GE</option>
-<option value="+233">🇬🇭 +233 GH</option>
-<option value="+30">🇬🇷 +30 GR</option>
-<option value="+502">🇬🇹 +502 GT</option>
-<option value="+224">🇬🇳 +224 GN</option>
-<option value="+245">🇬🇼 +245 GW</option>
-<option value="+592">🇬🇾 +592 GY</option>
-<option value="+509">🇭🇹 +509 HT</option>
-<option value="+504">🇭🇳 +504 HN</option>
-<option value="+36">🇭🇺 +36 HU</option>
-<option value="+354">🇮🇸 +354 IS</option>
-<option value="+62">🇮🇩 +62 ID</option>
-<option value="+98">🇮🇷 +98 IR</option>
-<option value="+964">🇮🇶 +964 IQ</option>
-<option value="+353">🇮🇪 +353 IE</option>
-<option value="+972">🇮🇱 +972 IL</option>
-<option value="+81">🇯🇵 +81 JP</option>
-<option value="+962">🇯🇴 +962 JO</option>
-<option value="+82">🇰🇷 +82 KR</option>
-<option value="+965">🇰🇼 +965 KW</option>
-<option value="+996">🇰🇬 +996 KG</option>
-<option value="+856">🇱🇦 +856 LA</option>
-<option value="+371">🇱🇻 +371 LV</option>
-<option value="+961">🇱🇧 +961 LB</option>
-<option value="+266">🇱🇸 +266 LS</option>
-<option value="+231">🇱🇷 +231 LR</option>
-<option value="+218">🇱🇾 +218 LY</option>
-<option value="+370">🇱🇹 +370 LT</option>
-<option value="+352">🇱🇺 +352 LU</option>
-<option value="+261">🇲🇬 +261 MG</option>
-<option value="+265">🇲🇼 +265 MW</option>
-<option value="+60">🇲🇾 +60 MY</option>
-<option value="+960">🇲🇻 +960 MV</option>
-<option value="+223">🇲🇱 +223 ML</option>
-<option value="+356">🇲🇹 +356 MT</option>
-<option value="+222">🇲🇷 +222 MR</option>
-<option value="+230">🇲🇺 +230 MU</option>
-<option value="+52">🇲🇽 +52 MX</option>
-<option value="+373">🇲🇩 +373 MD</option>
-<option value="+377">🇲🇨 +377 MC</option>
-<option value="+976">🇲🇳 +976 MN</option>
-<option value="+382">🇲🇪 +382 ME</option>
-<option value="+212">🇲🇦 +212 MA</option>
-<option value="+95">🇲🇲 +95 MM</option>
-<option value="+264">🇳🇦 +264 NA</option>
-<option value="+977">🇳🇵 +977 NP</option>
-<option value="+31">🇳🇱 +31 NL</option>
-<option value="+64">🇳🇿 +64 NZ</option>
-<option value="+505">🇳🇮 +505 NI</option>
-<option value="+227">🇳🇪 +227 NE</option>
-<option value="+234">🇳🇬 +234 NG</option>
-<option value="+47">🇳🇴 +47 NO</option>
-<option value="+968">🇴🇲 +968 OM</option>
-<option value="+92">🇵🇰 +92 PK</option>
-<option value="+507">🇵🇦 +507 PA</option>
-<option value="+595">🇵🇾 +595 PY</option>
-<option value="+51">🇵🇪 +51 PE</option>
-<option value="+63">🇵🇭 +63 PH</option>
-<option value="+48">🇵🇱 +48 PL</option>
-<option value="+974">🇶🇦 +974 QA</option>
-<option value="+40">🇷🇴 +40 RO</option>
-<option value="+250">🇷🇼 +250 RW</option>
-<option value="+966">🇸🇦 +966 SA</option>
-<option value="+221">🇸🇳 +221 SN</option>
-<option value="+381">🇷🇸 +381 RS</option>
-<option value="+65">🇸🇬 +65 SG</option>
-<option value="+421">🇸🇰 +421 SK</option>
-<option value="+386">🇸🇮 +386 SI</option>
-<option value="+27">🇿🇦 +27 ZA</option>
-<option value="+34">🇪🇸 +34 ES</option>
-<option value="+94">🇱🇰 +94 LK</option>
-<option value="+249">🇸🇩 +249 SD</option>
-<option value="+46">🇸🇪 +46 SE</option>
-<option value="+41">🇨🇭 +41 CH</option>
-<option value="+963">🇸🇾 +963 SY</option>
-<option value="+886">🇹🇼 +886 TW</option>
-<option value="+992">🇹🇯 +992 TJ</option>
-<option value="+66">🇹🇭 +66 TH</option>
-<option value="+228">🇹🇬 +228 TG</option>
-<option value="+216">🇹🇳 +216 TN</option>
-<option value="+90">🇹🇷 +90 TR</option>
-<option value="+380">🇺🇦 +380 UA</option>
-<option value="+971">🇦🇪 +971 AE</option>
-<option value="+598">🇺🇾 +598 UY</option>
-<option value="+998">🇺🇿 +998 UZ</option>
-<option value="+58">🇻🇪 +58 VE</option>
-<option value="+84">🇻🇳 +84 VN</option>
-<option value="+967">🇾🇪 +967 YE</option>
+<div class="box">
+<span class="s">Criar conta - Escolhe Email ou Número - CLICA E AVANÇA</span>
+<div class="tabs"><div id="tP" class="on" onclick="setM('phone')">📱 NÚMERO - TODOS PAÍSES</div><div id="tE" onclick="setM('email')">📧 EMAIL</div></div>
+<div id="bP">
+<select id="cc" class="input">
+<option value="+258">🇲🇿 Moçambique +258</option>
+<option value="+93">🇦🇫 Afeganistão +93</option><option value="+355">🇦🇱 Albânia +355</option><option value="+213">🇩🇿 Argélia +213</option><option value="+376">🇦🇩 Andorra +376</option><option value="+244">🇦🇴 Angola +244</option><option value="+54">🇦🇷 Argentina +54</option><option value="+374">🇦🇲 Arménia +374</option><option value="+61">🇦🇺 Austrália +61</option><option value="+43">🇦🇹 Áustria +43</option><option value="+994">🇦🇿 Azerbaijão +994</option><option value="+973">🇧🇭 Bahrein +973</option><option value="+880">🇧🇩 Bangladesh +880</option><option value="+375">🇧🇾 Bielorrússia +375</option><option value="+32">🇧🇪 Bélgica +32</option><option value="+501">🇧🇿 Belize +501</option><option value="+229">🇧🇯 Benim +229</option><option value="+975">🇧🇹 Butão +975</option><option value="+591">🇧🇴 Bolívia +591</option><option value="+387">🇧🇦 Bósnia +387</option><option value="+267">🇧🇼 Botsuana +267</option><option value="+55">🇧🇷 Brasil +55</option><option value="+673">🇧🇳 Brunei +673</option><option value="+359">🇧🇬 Bulgária +359</option><option value="+226">🇧🇫 Burkina +226</option><option value="+257">🇧🇮 Burundi +257</option><option value="+855">🇰🇭 Camboja +855</option><option value="+237">🇨🇲 Camarões +237</option><option value="+1">🇨🇦 Canadá +1</option><option value="+238">🇨🇻 Cabo Verde +238</option><option value="+236">🇨🇫 Rep Centro-Africana +236</option><option value="+235">🇹🇩 Chade +235</option><option value="+56">🇨🇱 Chile +56</option><option value="+86">🇨🇳 China +86</option><option value="+57">🇨🇴 Colômbia +57</option><option value="+269">🇰🇲 Comores +269</option><option value="+242">🇨🇬 Congo +242</option><option value="+243">🇨🇩 Congo RDC +243</option><option value="+506">🇨🇷 Costa Rica +506</option><option value="+385">🇭🇷 Croácia +385</option><option value="+53">🇨🇺 Cuba +53</option><option value="+357">🇨🇾 Chipre +357</option><option value="+420">🇨🇿 Tchéquia +420</option><option value="+45">🇩🇰 Dinamarca +45</option><option value="+253">🇩🇯 Djibouti +253</option><option value="+1">🇩🇲 Dominica +1</option><option value="+1">🇩🇴 Dominicana +1</option><option value="+593">🇪🇨 Equador +593</option><option value="+20">🇪🇬 Egito +20</option><option value="+503">🇸🇻 El Salvador +503</option><option value="+240">🇬🇶 Guiné Equatorial +240</option><option value="+291">🇪🇷 Eritreia +291</option><option value="+372">🇪🇪 Estónia +372</option><option value="+268">🇸🇿 Essuatíni +268</option><option value="+251">🇪🇹 Etiópia +251</option><option value="+679">🇫🇯 Fiji +679</option><option value="+358">🇫🇮 Finlândia +358</option><option value="+33">🇫🇷 França +33</option><option value="+241">🇬🇦 Gabão +241</option><option value="+220">🇬🇲 Gâmbia +220</option><option value="+995">🇬🇪 Geórgia +995</option><option value="+49">🇩🇪 Alemanha +49</option><option value="+233">🇬🇭 Gana +233</option><option value="+30">🇬🇷 Grécia +30</option><option value="+1">🇬🇩 Granada +1</option><option value="+502">🇬🇹 Guatemala +502</option><option value="+224">🇬🇳 Guiné +224</option><option value="+245">🇬🇼 Guiné-Bissau +245</option><option value="+592">🇬🇾 Guiana +592</option><option value="+509">🇭🇹 Haiti +509</option><option value="+504">🇭🇳 Honduras +504</option><option value="+36">🇭🇺 Hungria +36</option><option value="+354">🇮🇸 Islândia +354</option><option value="+91">🇮🇳 Índia +91</option><option value="+62">🇮🇩 Indonésia +62</option><option value="+98">🇮🇷 Irã +98</option><option value="+964">🇮🇶 Iraque +964</option><option value="+353">🇮🇪 Irlanda +353</option><option value="+972">🇮🇱 Israel +972</option><option value="+39">🇮🇹 Itália +39</option><option value="+81">🇯🇵 Japão +81</option><option value="+962">🇯🇴 Jordânia +962</option><option value="+7">🇰🇿 Cazaquistão +7</option><option value="+254">🇰🇪 Quênia +254</option><option value="+686">🇰🇮 Kiribati +686</option><option value="+850">🇰🇵 Coreia Norte +850</option><option value="+82">🇰🇷 Coreia Sul +82</option><option value="+383">🇽🇰 Kosovo +383</option><option value="+965">🇰🇼 Kuwait +965</option><option value="+996">🇰🇬 Quirguistão +996</option><option value="+856">🇱🇦 Laos +856</option><option value="+371">🇱🇻 Letónia +371</option><option value="+961">🇱🇧 Líbano +961</option><option value="+266">🇱🇸 Lesoto +266</option><option value="+231">🇱🇷 Libéria +231</option><option value="+218">🇱🇾 Líbia +218</option><option value="+423">🇱🇮 Liechtenstein +423</option><option value="+370">🇱🇹 Lituânia +370</option><option value="+352">🇱🇺 Luxemburgo +352</option><option value="+261">🇲🇬 Madagáscar +261</option><option value="+265">🇲🇼 Malawi +265</option><option value="+60">🇲🇾 Malásia +60</option><option value="+960">🇲🇻 Maldivas +960</option><option value="+223">🇲🇱 Mali +223</option><option value="+356">🇲🇹 Malta +356</option><option value="+692">🇲🇭 Marshall +692</option><option value="+222">🇲🇷 Mauritânia +222</option><option value="+230">🇲🇺 Maurício +230</option><option value="+52">🇲🇽 México +52</option><option value="+691">🇫🇲 Micronésia +691</option><option value="+373">🇲🇩 Moldávia +373</option><option value="+377">🇲🇨 Mônaco +377</option><option value="+976">🇲🇳 Mongólia +976</option><option value="+382">🇲🇪 Montenegro +382</option><option value="+212">🇲🇦 Marrocos +212</option><option value="+95">🇲🇲 Mianmar +95</option><option value="+264">🇳🇦 Namíbia +264</option><option value="+674">🇳🇷 Nauru +674</option><option value="+977">🇳🇵 Nepal +977</option><option value="+31">🇳🇱 Holanda +31</option><option value="+64">🇳🇿 Nova Zelândia +64</option><option value="+505">🇳🇮 Nicarágua +505</option><option value="+227">🇳🇪 Níger +227</option><option value="+234">🇳🇬 Nigéria +234</option><option value="+389">🇲🇰 Macedónia Norte +389</option><option value="+47">🇳🇴 Noruega +47</option><option value="+968">🇴🇲 Omã +968</option><option value="+92">🇵🇰 Paquistão +92</option><option value="+680">🇵🇼 Palau +680</option><option value="+970">🇵🇸 Palestina +970</option><option value="+507">🇵🇦 Panamá +507</option><option value="+675">🇵🇬 Papua +675</option><option value="+595">🇵🇾 Paraguai +595</option><option value="+51">🇵🇪 Peru +51</option><option value="+63">🇵🇭 Filipinas +63</option><option value="+48">🇵🇱 Polónia +48</option><option value="+351">🇵🇹 Portugal +351</option><option value="+974">🇶🇦 Catar +974</option><option value="+40">🇷🇴 Roménia +40</option><option value="+7">🇷🇺 Rússia +7</option><option value="+250">🇷🇼 Ruanda +250</option><option value="+1">🇰🇳 São Cristóvão +1</option><option value="+1">🇱🇨 Santa Lúcia +1</option><option value="+1">🇻🇨 São Vicente +1</option><option value="+685">🇼🇸 Samoa +685</option><option value="+378">🇸🇲 San Marino +378</option><option value="+239">🇸🇹 São Tomé +239</option><option value="+966">🇸🇦 Arábia Saudita +966</option><option value="+221">🇸🇳 Senegal +221</option><option value="+381">🇷🇸 Sérvia +381</option><option value="+248">🇸🇨 Seychelles +248</option><option value="+232">🇸🇱 Serra Leoa +232</option><option value="+65">🇸🇬 Singapura +65</option><option value="+421">🇸🇰 Eslováquia +421</option><option value="+386">🇸🇮 Eslovénia +386</option><option value="+677">🇸🇧 Salomão +677</option><option value="+252">🇸🇴 Somália +252</option><option value="+27">🇿🇦 África do Sul +27</option><option value="+211">🇸🇸 Sudão do Sul +211</option><option value="+34">🇪🇸 Espanha +34</option><option value="+94">🇱🇰 Sri Lanka +94</option><option value="+249">🇸🇩 Sudão +249</option><option value="+597">🇸🇷 Suriname +597</option><option value="+46">🇸🇪 Suécia +46</option><option value="+41">🇨🇭 Suíça +41</option><option value="+963">🇸🇾 Síria +963</option><option value="+886">🇹🇼 Taiwan +886</option><option value="+992">🇹🇯 Tajiquistão +992</option><option value="+255">🇹🇿 Tanzânia +255</option><option value="+66">🇹🇭 Tailândia +66</option><option value="+228">🇹🇬 Togo +228</option><option value="+676">🇹🇴 Tonga +676</option><option value="+1">🇹🇹 Trinidad +1</option><option value="+216">🇹🇳 Tunísia +216</option><option value="+90">🇹🇷 Turquia +90</option><option value="+993">🇹🇲 Turquemenistão +993</option><option value="+688">🇹🇻 Tuvalu +688</option><option value="+256">🇺🇬 Uganda +256</option><option value="+380">🇺🇦 Ucrânia +380</option><option value="+971">🇦🇪 Emirados +971</option><option value="+44">🇬🇧 Reino Unido +44</option><option value="+1">🇺🇸 EUA +1</option><option value="+598">🇺🇾 Uruguai +598</option><option value="+998">🇺🇿 Uzbequistão +998</option><option value="+678">🇻🇺 Vanuatu +678</option><option value="+58">🇻🇪 Venezuela +58</option><option value="+84">🇻🇳 Vietname +84</option><option value="+967">🇾🇪 Iémen +967</option><option value="+260">🇿🇲 Zâmbia +260</option><option value="+263">🇿🇼 Zimbábue +263</option>
 </select>
-<input id="phone" class="input" style="flex:1;margin:0" placeholder="Número">
-</div></div>
-<div id="boxEmail" style="display:none"><input id="email" class="input" type="email" placeholder="Seu email"></div>
-<input id="pass" class="input" type="password" placeholder="Senha (letras + números)">
-<div style="margin-top:12px;display:flex;gap:10px;align-items:center"><img id="prevAv" style="width:56px;height:56px;border-radius:50%;background:#111;object-fit:cover;display:none"><label style="background:#121212;border:1px dashed #333;padding:10px 14px;border-radius:20px;font-size:13px;color:#aaa">📷 Foto<input id="foto" type="file" accept="image/*" hidden onchange="loadFoto(this)"></label></div>
-<p id="err" style="color:#ff4d4d;display:none;margin-top:10px"></p>
-<button class="btn" onclick="criarConta()">Criar conta</button>
-<span style="color:#3b82f6;text-align:center;margin-top:16px;display:block" onclick="openRecup()">Recuperar conta</span>
+<input id="phone" class="input" placeholder="Número ex: 869116478">
 </div>
+<div id="bE" style="display:none"><input id="email" class="input" placeholder="Email ex: beljo@gmail.com"></div>
 
-<div id="pubModal" class="modal" onclick="if(event.target==this)closePub()"><div class="modal-box"><h3>Publicar</h3><input id="vidDesc" class="input" placeholder="Legenda"><button class="btn" onclick="publicarVideo()">📹 Vídeo</button><button class="btn2" onclick="publicarStory()">🟢 Story</button><button class="btn2" onclick="startLive()">🔴 LIVE</button><button class="btn2" onclick="closePub()">Fechar</button></div></div>
-<div id="editModal" class="modal" onclick="if(event.target==this)closeEdit()"><div class="modal-box"><h3>Editar perfil</h3><div style="text-align:center;margin-top:14px"><div onclick="document.getElementById('editFoto').click()" class="story-ring"><img id="editAvPrev" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #000;display:block"></div><p style="color:#3b82f6;margin-top:8px" onclick="document.getElementById('editFoto').click()">Trocar foto</p><input id="editFoto" type="file" accept="image/*" hidden onchange="loadEditFoto(this)"></div><input id="editNome" class="input" placeholder="Nome"><input id="editBio" class="input" placeholder="Bio"><div style="display:flex;gap:8px;margin-top:12px"><input id="editStoryText" class="input" style="flex:1;margin:0" placeholder="Story"><button class="btn2" style="width:auto;margin:0" onclick="document.getElementById('editStoryFoto').click()">📷</button><input id="editStoryFoto" type="file" accept="image/*" hidden onchange="loadStoryFoto(this)"></div><img id="editStoryPrev" style="width:100%;height:100px;object-fit:cover;border-radius:12px;margin-top:10px;display:none"><button class="btn" onclick="salvarEdit()">Salvar</button><button class="btn2" onclick="closeEdit()">Cancelar</button></div></div>
-<div id="storyModal" class="modal" style="align-items:center;justify-content:center;background:#000" onclick="closeStory()"><div style="width:100%;max-width:400px;height:85vh;background:#111;border-radius:16px;position:relative;overflow:hidden"><img id="storyImg" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;top:0;left:0;right:0;padding:14px;display:flex;gap:10px;align-items:center;background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent)"><img id="storyUserFoto" style="width:36px;height:36px;border-radius:50%"><b id="storyUserNome"></b><span style="margin-left:auto" onclick="closeStory()">✕</span></div><div style="position:absolute;bottom:0;left:0;right:0;padding:14px"><p id="storyText"></p></div></div></div>
-<div id="shareModal" class="modal" onclick="if(event.target==this)closeShare()"><div class="modal-box"><h3>Partilhar</h3><p id="shareText" style="color:#777;margin-top:8px"></p><div style="display:flex;gap:10px;margin-top:16px"><button class="btn" style="flex:1" onclick="copyLink()">📋 Copiar link</button><button class="btn2" style="flex:1" onclick="shareWhats()">💬 WhatsApp</button></div><button class="btn2" onclick="closeShare()">Fechar</button></div></div>
-<div id="recModal" class="modal" onclick="if(event.target==this)closeRec()"><div class="modal-box"><div id="step1" class="step on"><h3>Recuperar conta</h3><input id="recContato" class="input" placeholder="Número ou Email"><input id="recSenha" class="input" type="password" placeholder="Senha"><p id="recErr" style="color:#ff4d4d;display:none"></p><button class="btn" onclick="tentarRecup()">Entrar</button><span style="color:#ff4444;text-align:center;margin-top:16px;display:block;font-weight:800" onclick="goPerdeuSenha()">Perdeu senha?? ›</span><button class="btn2" onclick="closeRec()">Voltar</button></div><div id="step2" class="step"><h3>Perdeu senha??</h3><div class="opt" onclick="enviarCodigo('SMS')"><span>📩 SMS</span><span>›</span></div><div class="opt" onclick="enviarCodigo('WhatsApp')"><span>💬 WhatsApp</span><span>›</span></div><div class="opt" onclick="enviarCodigo('Chamada')"><span>📞 Chamada</span><span>›</span></div><div class="opt" onclick="enviarCodigo('Email')"><span>📧 Email</span><span>›</span></div><div id="codeBox" style="display:none;margin-top:14px"><div id="codeShow" style="background:#fff;color:#000;padding:12px;border-radius:10px;text-align:center;letter-spacing:6px;font-weight:900;font-size:22px">------</div><input id="codeInput" class="input" placeholder="Código" maxlength="6" style="text-align:center"><button class="btn" onclick="confirmarCodigo()">Confirmar</button><div id="newPassBox" style="display:none;margin-top:12px"><input id="newPass" class="input" type="password" placeholder="Nova senha"><button class="btn" onclick="salvarNovaSenha()">Salvar</button></div></div><button class="btn2" onclick="backStep1()">← Voltar</button></div></div></div>
-<div id="lupaModal" class="modal" onclick="if(event.target==this)closeLupa()"><div class="modal-box"><h3>🔍 Pesquisa</h3><input id="lupaIn" class="input" placeholder="Pesquisar..." oninput="doLupa(this.value)"><div id="lupaRes" style="margin-top:12px"></div><button class="btn2" onclick="closeLupa()">Fechar</button></div></div>
-
-<script>
-const DONO='869116478';
-let modo='phone',fotoBase=null,codigoRec='',viewingId=null,recUser=null,editFotoBase=null,storyFotoBase=null,shareId=null;
-let users=JSON.parse(localStorage.getItem('bell_users')||'[]');
-let user=JSON.parse(localStorage.getItem('bell_u')||'null');
-let videos=JSON.parse(localStorage.getItem('bell_vids')||'[]');
-let stories=JSON.parse(localStorage.getItem('bell_stories')||'[]');
-let atividades=JSON.parse(localStorage.getItem('bell_acts')||'[]');
-let follows=JSON.parse(localStorage.getItem('bell_follows')||'[]');
-function setTab(t){modo=t;document.getElementById('tabPhone').className=t=='phone'?'on':'';document.getElementById('tabEmail').className=t=='email'?'on':'';document.getElementById('boxPhone').style.display=t=='phone'?'block':'none';document.getElementById('boxEmail').style.display=t=='email'?'block':'none';}
-function loadFoto(i){let r=new FileReader();r.onload=e=>{fotoBase=e.target.result;document.getElementById('prevAv').src=fotoBase;document.getElementById('prevAv').style.display='block'};r.readAsDataURL(i.files[0]);}
-function loadEditFoto(i){let r=new FileReader();r.onload=e=>{editFotoBase=e.target.result;document.getElementById('editAvPrev').src=editFotoBase};r.readAsDataURL(i.files[0]);}
-function loadStoryFoto(i){let r=new FileReader();r.onload=e=>{storyFotoBase=e.target.result;document.getElementById('editStoryPrev').src=storyFotoBase;document.getElementById('editStoryPrev').style.display='block'};r.readAsDataURL(i.files[0]);}
-function showP(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');document.querySelectorAll('.b-item').forEach(b=>b.classList.remove('on'));let el=document.getElementById('b-'+id);if(el)el.classList.add('on');if(id=='home')renderHome();if(id=='profile')renderProfile(viewingId?users.find(u=>u.id==viewingId):user);if(id=='relogio')renderRelogio();if(id=='msg')renderMsg();}
-function viewOwn(){viewingId=user?user.id:null;showP('profile');}
-function openSearch(){document.getElementById('lupaModal').style.display='flex';}function closeLupa(){document.getElementById('lupaModal').style.display='none';}
-function openPublish(){if(!user)return;document.getElementById('pubModal').style.display='flex';}function closePub(){document.getElementById('pubModal').style.display='none';}
-function openEdit(){document.getElementById('editModal').style.display='flex';document.getElementById('editNome').value=user.name;document.getElementById('editBio').value=user.bio||'';document.getElementById('editAvPrev').src=user.foto;
-<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>BellApp 8.1 Fix</title>
-<style>
-*{-webkit-tap-highlight-color:transparent!important;-webkit-touch-callout:none;box-sizing:border-box;margin:0;padding:0}
-html,body{touch-action:manipulation;overscroll-behavior:none}
-body{background:#000;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden;font-family:-apple-system,sans-serif;-webkit-user-select:none;user-select:none}
-button,a,div{-webkit-tap-highlight-color:transparent;outline:none}
-.top{height:52px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;border-bottom:1px solid #1a1a1a;z-index:10}
-.screen{flex:1;overflow:hidden;position:relative}.page{display:none;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}.page.active{display:flex;flex-direction:column}
-.bottom{height:68px;background:#000;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;align-items:center;padding-bottom:6px;z-index:10}
-.b-item{color:#666;text-align:center;flex:1;padding:8px}.b-item.on{color:#fff}.b-item i{font-size:26px;font-style:normal}
-.b-item.plus i{background:#fff;color:#000;width:44px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900}
-.auth{position:fixed;inset:0;background:#000;z-index:999;padding:18px;overflow-y:auto}
-.input{width:100%;background:#121212;border:1px solid #2a2a2a;color:#fff;padding:14px;border-radius:12px;margin-top:12px;font-size:16px;outline:none}
-.btn{background:#fff;color:#000;border:0;padding:14px;border-radius:28px;font-weight:800;width:100%;margin-top:14px}
-.btn2{background:#121212;border:1px solid #333;color:#fff;padding:12px;border-radius:28px;width:100%;margin-top:10px}
-.tab{display:flex;gap:8px;margin-top:12px}.tab div{flex:1;padding:10px;text-align:center;border-radius:20px;background:#111;border:1px solid #222;font-size:12px}.tab div.on{background:#fff;color:#000;font-weight:800}
-.follow{background:#fff;color:#000;border:0;padding:8px 20px;border-radius:8px;font-weight:800}.follow.following{background:#2a2a2a;color:#fff;border:1px solid #333}
-.v-badge{width:18px;height:18px;background:#20D5EC;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900;margin-left:4px}
-.story-ring{padding:3px;background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);border-radius:50%;display:inline-block}
-.video-card{width:100%;height:80vh;background:#0a0a0a;position:relative;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #111;flex-shrink:0}
-.video-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#111}
-.video-thumb{background:#111;aspect-ratio:9/14;display:flex;align-items:center;justify-content:center;color:#666}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:300;display:none;align-items:flex-end}.modal.show{display:flex}.modal-box{background:#121212;width:100%;border-radius:24px 24px 0 0;padding:20px;max-height:92vh;overflow-y:auto}
-.opt{padding:14px;background:#1a1a1a;border-radius:12px;margin-top:10px;display:flex;justify-content:space-between;border:1px solid #333}
-.step{display:none}.step.on{display:block}
-.story-bar{display:flex;gap:12px;padding:12px;overflow-x:auto;border-bottom:1px solid #111}.story-item{display:flex;flex-direction:column;align-items:center;min-width:64px}
-.action-col{position:absolute;right:10px;bottom:90px;display:flex;flex-direction:column;gap:18px;align-items:center}
-</style></head><body>
-<div class="top"><b onclick="go('home')">BellApp 🔔</b><div><span style="padding:10px" onclick="openLupa()">🔍</span><span style="padding:10px" onclick="go('msg')">💬</span></div></div>
-<div class="screen">
-<div id="p-home" class="page active"></div>
-<div id="p-relogio" class="page"><div style="padding:16px"><h3>Relógio</h3></div><div id="relogioList"></div></div>
-<div id="p-msg" class="page"><div style="padding:16px"><h3>Mensagens</h3></div><div id="mList"></div></div>
-<div id="p-profile" class="page"><div id="profView"></div></div>
-</div>
-<div class="bottom">
-<div class="b-item on" id="b-home" onclick="go('home')"><i>⌂</i><br><small>Casinha</small></div>
-<div class="b-item" id="b-relogio" onclick="go('relogio')"><i>◷</i><br><small>Relógio</small></div>
-<div class="b-item" onclick="openPub()"><div class="plus"><i>+</i></div></div>
-<div class="b-item" id="b-profile" onclick="viewOwn()"><i>👤</i><br><small>Eu</small></div>
-</div>
-
-<div id="auth" class="auth">
-<h2 style="margin-top:10px">BellApp 🔔</h2>
-<p style="color:#666;font-size:13px;margin-top:4px">1º Selo original 👑 só dono 869116478</p>
-<p style="color:#666;font-size:12px">2º Nome só muda a cada 3 meses</p>
-<div class="tab"><div id="tabPhone" class="on" onclick="setTab('phone')">📱 Número - todos países</div><div id="tabEmail" onclick="setTab('email')">📧 Email</div></div>
-<input id="nomeConta" class="input" placeholder="3º Escreve nome da conta aqui" autocomplete="off">
-<div id="boxPhone"><div style="display:flex;gap:8px;margin-top:12px">
-<select id="cc" class="input" style="width:155px;margin:0;font-size:12px">
-<option value="+258">🇲🇿 +258 Mozambique</option><option value="+1">🇺🇸 +1 USA/Canada</option><option value="+55">🇧🇷 +55 Brazil</option><option value="+351">🇵🇹 +351 Portugal</option><option value="+244">🇦🇴 +244 Angola</option><option value="+27">🇿🇦 +27 South Africa</option><option value="+44">🇬🇧 +44 UK</option><option value="+33">🇫🇷 +33 France</option><option value="+49">🇩🇪 +49 Germany</option><option value="+34">🇪🇸 +34 Spain</option><option value="+39">🇮🇹 +39 Italy</option><option value="+91">🇮🇳 +91 India</option><option value="+86">🇨🇳 +86 China</option><option value="+81">🇯🇵 +81 Japan</option><option value="+7">🇷🇺 +7 Russia</option><option value="+234">🇳🇬 +234 Nigeria</option><option value="+254">🇰🇪 +254 Kenya</option><option value="+255">🇹🇿 +255 Tanzania</option><option value="+256">🇺🇬 +256 Uganda</option><option value="+260">🇿🇲 +260 Zambia</option><option value="+263">🇿🇼 +263 Zimbabwe</option><option value="+93">🇦🇫 +93</option><option value="+355">🇦🇱 +355</option><option value="+213">🇩🇿 +213</option><option value="+376">🇦🇩 +376</option><option value="+54">🇦🇷 +54</option><option value="+374">🇦🇲 +374</option><option value="+61">🇦🇺 +61</option><option value="+43">🇦🇹 +43</option><option value="+994">🇦🇿 +994</option><option value="+973">🇧🇭 +973</option><option value="+880">🇧🇩 +880</option><option value="+375">🇧🇾 +375</option><option value="+32">🇧🇪 +32</option><option value="+591">🇧🇴 +591</option><option value="+57">🇨🇴 +57</option><option value="+20">🇪🇬 +20</option><option value="+62">🇮🇩 +62</option><option value="+98">🇮🇷 +98</option><option value="+52">🇲🇽 +52</option><option value="+212">🇲🇦 +212</option><option value="+966">🇸🇦 +966</option><option value="+90">🇹🇷 +90</option><option value="+971">🇦🇪 +971</option>
-</select>
-<input id="phone" class="input" style="flex:1;margin:0" placeholder="4º Número" inputmode="numeric">
-</div></div>
-<div id="boxEmail" style="display:none"><input id="email" class="input" type="email" placeholder="4º Seu email" autocomplete="off"></div>
-<input id="pass" class="input" type="password" placeholder="5º Senha letras+números">
-<div style="margin-top:12px;display:flex;gap:10px;align-items:center"><img id="prevAv" style="width:56px;height:56px;border-radius:50%;background:#111;object-fit:cover;display:none"><label style="background:#121212;border:1px dashed #333;padding:10px 14px;border-radius:20px;font-size:13px;color:#aaa">📷 Foto obrigatória<input id="foto" type="file" accept="image/*" hidden></label></div>
-<p id="err" style="color:#ff4d4d;display:none;margin-top:10px;font-size:13px"></p>
-<button type="button" class="btn" id="btnCriar">6º Criar conta - clica aqui</button>
-<span style="color:#3b82f6;text-align:center;margin-top:16px;display:block" id="btnRec">Recuperar conta</span>
-</div>
-
-<div id="pubModal" class="modal"><div class="modal-box"><h3>Publicar</h3><input id="vidDesc" class="input" placeholder="Legenda"><button type="button" class="btn" onclick="pubVideo()">📹 Vídeo</button><button type="button" class="btn2" onclick="pubStory()">🟢 Story</button><button type="button" class="btn2" onclick="doLive()">🔴 LIVE 100 seguidores</button><button type="button" class="btn2" onclick="closePub()">Fechar</button></div></div>
-<div id="editModal" class="modal"><div class="modal-box"><h3>Editar perfil</h3><div style="text-align:center;margin-top:14px"><div class="story-ring"><img id="editAvPrev" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #000;display:block"></div><label style="color:#3b82f6;margin-top:8px;display:block">Trocar foto<input id="editFoto" type="file" accept="image/*" hidden></label></div><input id="editNome" class="input" placeholder="Nome - só a cada 3 meses"><input id="editBio" class="input" placeholder="Bio"><div style="display:flex;gap:8px;margin-top:12px"><input id="editStoryText" class="input" style="flex:1;margin:0" placeholder="Story"><label class="btn2" style="width:auto;margin:0">📷<input id="editStoryFoto" type="file" accept="image/*" hidden></label></div><img id="editStoryPrev" style="width:100%;height:100px;object-fit:cover;border-radius:12px;margin-top:10px;display:none"><button type="button" class="btn" onclick="saveEdit()">Salvar</button><button type="button" class="btn2" onclick="closeEdit()">Cancelar</button></div></div>
-<div id="storyModal" class="modal" style="justify-content:center;align-items:center"><div style="width:100%;max-width:400px;height:85vh;background:#111;border-radius:16px;position:relative;overflow:hidden"><img id="storyImg" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;top:0;left:0;right:0;padding:14px;display:flex;gap:10px;align-items:center;background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent)"><img id="storyUserFoto" style="width:36px;height:36px;border-radius:50%"><b id="storyUserNome"></b><span style="margin-left:auto;padding:10px" onclick="closeStory()">✕</span></div><div style="position:absolute;bottom:0;left:0;right:0;padding:14px"><p id="storyText"></p></div></div></div>
-<div id="shareModal" class="modal"><div class="modal-box"><h3>Partilhar</h3><p id="shareText" style="color:#777;margin-top:8px"></p><div style="display:flex;gap:10px;margin-top:16px"><button type="button" class="btn" style="flex:1" onclick="copyLink()">📋 Copiar link</button><button type="button" class="btn2" style="flex:1" onclick="shareWhats()">💬 WhatsApp</button></div><button type="button" class="btn2" onclick="closeShare()">Fechar</button></div></div>
-<div id="recModal" class="modal"><div class="modal-box"><div id="step1" class="step on"><h3>Recuperar conta</h3><input id="recContato" class="input" placeholder="Número ou Email"><input id="recSenha" class="input" type="password" placeholder="Senha"><p id="recErr" style="color:#ff4d4d;display:none"></p><button type="button" class="btn" onclick="tryRec()">Entrar</button><span style="color:#ff4444;text-align:center;margin-top:16px;display:block;font-weight:800" onclick="goStep2()">Perdeu senha?? ›</span><button type="button" class="btn2" onclick="closeRec()">Voltar</button></div><div id="step2" class="step"><h3>Perdeu senha??</h3><div class="opt" onclick="sendCode('SMS')"><span>📩 SMS</span><span>›</span></div><div class="opt" onclick="sendCode('WhatsApp')"><span>💬 WhatsApp</span><span>›</span></div><div class="opt" onclick="sendCode('Chamada')"><span>📞 Chamada</span><span>›</span></div><div class="opt" onclick="sendCode('Email')"><span>📧 Email</span><span>›</span></div><div id="codeBox" style="display:none;margin-top:14px"><div id="codeShow" style="background:#fff;color:#000;padding:12px;border-radius:10px;text-align:center;letter-spacing:6px;font-weight:900;font-size:22px">------</div><input id="codeInput" class="input" placeholder="Código 6 dígitos" maxlength="6" style="text-align:center"><button type="button" class="btn" onclick="confirmCode()">Confirmar</button><div id="newPassBox" style="display:none;margin-top:12px"><input id="newPass" class="input" type="password" placeholder="Nova senha"><button type="button" class="btn" onclick="saveNewPass()">Salvar</button></div></div><button type="button" class="btn2" onclick="goStep1()">← Voltar</button></div></div></div>
-<div id="lupaModal" class="modal"><div class="modal-box"><h3>🔍 Pesquisa</h3><input id="lupaIn" class="input" placeholder="Pesquisar..." autocomplete="off"><div id="lupaRes" style="margin-top:12px"></div><button type="button" class="btn2" onclick="closeLupa()">Fechar</button></div></div>
-
-<script>
-const DONO='869116478';
-let modo='phone',fotoBase=null,codigoRec='',viewingId=null,recUser=null,editFotoBase=null,storyFotoBase=null,shareId=null;
-let users=JSON.parse(localStorage.getItem('bell_users')||'[]');
-let user=JSON.parse(localStorage.getItem('bell_u')||'null');
-let videos=JSON.parse(localStorage.getItem('bell_vids')||'[]');
-let stories=JSON.parse(localStorage.getItem('bell_stories')||'[]');
-let atividades=JSON.parse(localStorage.getItem('bell_acts')||'[]');
-let follows=JSON.parse(localStorage.getItem('bell_follows')||'[]');
-
-function setTab(t){modo=t;document.getElementById('tabPhone').className=t=='phone'?'on':'';document.getElementById('tabEmail').className=t=='email'?'on':'';document.getElementById('boxPhone').style.display=t=='phone'?'block':'none';document.getElementById('boxEmail').style.display=t=='email'?'block':'none';}
-function loadFoto(file){let r=new FileReader();r.onload=e=>{fotoBase=e.target.result;let im=document.getElementById('prevAv');im.src=fotoBase;im.style.display='block';};r.readAsDataURL(file);}
-function loadEditFoto(file){let r=new FileReader();r.onload=e=>{editFotoBase=e.target.result;document.getElementById('editAvPrev').src=editFotoBase;};r.readAsDataURL(file);}
-function loadStoryFoto(file){let r=new FileReader();r.onload=e=>{storyFotoBase=e.target.result;let p=document.getElementById('editStoryPrev');p.src=storyFotoBase;p.style.display='block';};r.readAsDataURL(file);}
-
-document.getElementById('foto').addEventListener('change',e=>{if(e.target.files[0])loadFoto(e.target.files[0])});
-document.getElementById('editFoto').addEventListener('change',e=>{if(e.target.files[0])loadEditFoto(e.target.files[0])});
-document.getElementById('editStoryFoto').addEventListener('change',e=>{if(e.target.files[0])loadStoryFoto(e.target.files[0])});
-document.getElementById('btnCriar').addEventListener('click',criarConta);
-document.getElementById('btnRec').addEventListener('click',openRecup);
-document.getElementById('lupaIn').addEventListener('input',e=>doLupa(e.target.value));
-
-function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');document.querySelectorAll('.b-item').forEach(b=>b.classList.remove('on'));let el=document.getElementById('b-'+id);if(el)el.classList.add('on');if(id=='home')renderHome();if(id=='profile')renderProfile(viewingId?users.find(u=>u.id==viewingId):user);if(id=='relogio')renderRelogio();if(id=='msg')renderMsg();}
-function viewOwn(){viewingId=user?user.id:null;go('profile');}
-function openLupa(){document.getElementById('lupaModal').classList.add('show');}function closeLupa(){document.getElementById('lupaModal').classList.remove('show');}
-function openPub(){if(!user)return;document.getElementById('pubModal').classList.add('show');}function closePub(){document.getElementById('pubModal').classList.remove('show');}
-function openEdit(){document.getElementById('editModal').classList.add('show');document.getElementById('editNome').value=user.name;document.getElementById('editBio').value=user.bio||'';document.getElementById('editAvPrev').src=user.foto;editFotoBase=user.foto;}function closeEdit(){document.getElementById('editModal').classList.remove('show');}
-function openRecup(){document.getElementById('recModal').classList.add('show');}function closeRec(){document.getElementById('recModal').classList.remove('show');}
-function goStep2(){document.getElementById('step1').className='step';document.getElementById('step2').className='step on';}function goStep1(){document.getElementById('step2').className='step';document.getElementById('step1').className='step on';}
-function openStory(id){let s=stories.find(x=>x.id==id);if(!s)return;document.getElementById('storyImg').src=s.foto||s.userFoto;document.getElementById('storyUserFoto').src=s.userFoto;document.getElementById('storyUserNome').textContent=s.userName;document.getElementById('storyText').textContent=s.text||'';document.getElementById('storyModal').classList.add('show');}function closeStory(){document.getElementById('storyModal').classList.remove('show');}
-function openShare(id){shareId=id;let v=videos.find(x=>x.id==id);document.getElementById('shareText').textContent=v?`Partilhar: ${v.desc}`:'Partilhar';document.getElementById('shareModal').classList.add('show');}function closeShare(){document.getElementById('shareModal').classList.remove('show');}
-function copyLink(){let v=videos.find(x=>x.id==shareId);let link=`https://bellapp.com/video/${shareId}`;navigator.clipboard.writeText(link).then(()=>{alert('Link copiado!');closeShare();});}
-function shareWhats(){let link=`https://bellapp.com/video/${shareId}`;window.open(`https://wa.me/?text=${encodeURIComponent(link)}`,'_blank');}
-
-function criarConta(){
- let nome=document.getElementById('nomeConta').value.trim();
- let ph=document.getElementById('phone').value.replace(/\D/g,'');
- let em=document.getElementById('email').value.trim().toLowerCase();
- let pw=document.getElementById('pass').value;
- let er=document.getElementById('err');
- let cc=document.getElementById('cc').value;
- er.style.display='none';
- if(!nome){er.textContent='1º Escreve nome da conta';er.style.display='block';return;}
- if(!fotoBase){er.textContent='Foto obrigatória';er.style.display='block';return;}
- if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){er.textContent='Senha letras+números min 6';er.style.display='block';return;}
- let full='',idc='';
- if(modo=='email'){
-  if(!em.includes('@')){er.textContent='Email inválido';er.style.display='block';return;}
-  full=em;idc=em;
- }else{
-  if(ph.length<8){er.textContent='Número inválido';er.style.display='block';return;}
-  if(ph.includes(DONO)&&users.some(u=>(u.full||'').replace(/\D/g,'').includes(DONO))&&(!user||!user.owner)){er.textContent='⛔ 869116478 já é do dono';er.style.display='block';return;}
-  full=cc+' '+ph;idc=ph;
- }
- let novo={id:Date.now(),name:nome,full:full,idContato:idc,pass:pw,foto:fotoBase,owner:ph.includes(DONO),followers:ph.includes(DONO)?15000:80,following:120,bio:'',nomeChangedAt:Date.now()};
- users=users.filter(u=>u.idContato!=idc);users.push(novo);localStorage.setItem('bell_users',JSON.stringify(users));user=novo;localStorage.setItem('bell_u',JSON.stringify(user));
- document.getElementById('auth').style.display='none';
- viewingId=user.id;renderProfile(user);renderHome();go('profile');
-}
-
-function saveEdit(){
- let nn=document.getElementById('editNome').value.trim(),nb=document.getElementById('editBio').value.trim(),ns=document.getElementById('editStoryText').value.trim();
- if(!nn)return;
- let agora=Date.now(),ultimo=user.nomeChangedAt||0,tres=90*24*60*60*1000;
- if(nn!==user.name&&agora-ultimo<tres){alert('Nome só muda a cada 3 meses. Faltam '+Math.ceil((tres-(agora-ultimo))/86400000)+' dias');return;}
- if(nn!==user.name)user.nomeChangedAt=agora;
- user.name=nn;user.bio=nb;if(editFotoBase)user.foto=editFotoBase;
- users=users.map(u=>u.id==user.id?user:u);localStorage.setItem('bell_users',JSON.stringify(users));localStorage.setItem('bell_u',JSON.stringify(user));
- videos=videos.map(v=>{if(v.ownerId==user.id){v.userName=user.name;v.userFoto=user.foto}return v});localStorage.setItem('bell<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BellApp 9.1</title>
-<style>
-body{margin:0;background:#000;color:#fff;font-family:system-ui;padding:16px}
-*{box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent}
-.input{width:100%;background:#151515;border:1px solid #333;color:#fff;padding:16px;border-radius:12px;margin-top:10px;font-size:16px}
-.btn{background:#fff;color:#000;border:0;padding:16px;border-radius:30px;font-weight:900;width:100%;margin-top:12px}
-.btn2{background:#222;color:#fff;border:1px solid #444;padding:14px;border-radius:30px;width:100%;margin-top:10px}
-.wizard{border:1px solid #222;border-radius:20px;padding:16px;margin-top:12px;display:none}
-.wizard.on{display:block;background:#0a0a0a}
-.tab2{display:flex;gap:8px;margin-top:10px}
-.tab2 div{flex:1;padding:12px;text-align:center;border-radius:20px;border:1px solid #333}
-.tab2 div.on{background:#fff;color:#000;font-weight:800}
-</style></head><body>
-
-<h2>BellApp 🔔 9.1 - Email Funciona</h2>
-
-<div id="w1" class="wizard on">
-<b>1º SELO ORIGINAL - TOQUE PARA COMEÇAR</b><p style="color:#aaa;font-size:13px;margin-top:8px">👑 Selo só uma vez - dono 869116478<br>Toque no botão abaixo para avançar</p>
-<button class="btn" onclick="go(2)">COMEÇAR →</button>
-</div>
-
-<div id="w2" class="wizard">
-<b>2º NOME - só muda a cada 3 meses</b>
-<input id="nome" class="input" placeholder="Teu nome - ex: Beljo">
-<button class="btn" onclick="if(nomeVal()) go(3)">PRÓXIMO →</button>
-</div>
-
-<div id="w3" class="wizard">
-<b>3º ESCOLHE - NÚMERO OU EMAIL</b>
-<div class="tab2">
-<div id="tPhone" class="on" onclick="setM('phone')">📱 NÚMERO</div>
-<div id="tEmail" onclick="setM('email')">📧 EMAIL</div>
-</div>
-
-<div id="boxPhone">
-<select id="cc" class="input"><option value="+258">🇲🇿 +258 MZ</option><option value="+55">🇧🇷 +55 BR</option><option value="+351">🇵🇹 +351 PT</option><option value="+1">🇺🇸 +1 USA</option><option value="+244">🇦🇴 +244 AO</option><option value="+27">🇿🇦 +27 ZA</option><option value="+44">🇬🇧 +44 UK</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+34">🇪🇸 +34</option><option value="+91">🇮🇳 +91</option><option value="+86">🇨🇳 +86</option><option value="+81">🇯🇵 +81</option><option value="+234">🇳🇬 +234</option><option value="+254">🇰🇪 +254</option></select>
-<input id="phone" class="input" placeholder="Teu número" inputmode="numeric">
-</div>
-
-<div id="boxEmail" style="display:none">
-<input id="email" class="input" placeholder="Teu email - beljo@gmail.com">
-</div>
-
-<button class="btn" onclick="checkContato()">PRÓXIMO →</button>
-</div>
-
-<div id="w4" class="wizard">
-<b>4º SENHA + FOTO + PARTILHAR</b>
+<input id="nome" class="input" placeholder="Nome (só muda a cada 3 meses)">
+<input id="bio" class="input" placeholder="Bio - ex: Dono do BellApp 🔔">
 <input id="pass" class="input" type="password" placeholder="Senha letras+números min 6">
-<div style="margin-top:10px;display:flex;gap:10px;align-items:center"><img id="prev" style="width:60px;height:60px;border-radius:50%;background:#111;object-fit:cover;display:none"><label class="btn2" style="width:auto;margin:0">📷 Foto<input id="foto" type="file" accept="image/*" hidden></label></div>
-<button class="btn" onclick="checkFinal()">PRÓXIMO →</button>
-</div>
+<div style="display:flex;gap:10px;margin-top:10px"><img id="prev" style="width:64px;height:64px;border-radius:50%;background:#111;object-fit:cover;display:none"><label style="padding:10px 14px;border:1px solid #333;border-radius:20px;background:#111;cursor:pointer">📷 Foto<input id="foto" type="file" hidden accept="image/*"></label></div>
 
-<div id="w5" class="wizard">
-<b>5º CRIAR CONTA</b>
-<p id="resumo" style="color:#aaa;font-size:13px;margin-top:8px"></p>
-<button class="btn" onclick="criar()">✓ CRIAR CONTA</button>
-</div>
-
-<p id="err" style="color:#ff4d4d;display:none;margin-top:10px"></p>
-
-<div id="app" style="display:none;margin-top:20px;border-top:1px solid #222;padding-top:16px">
-<h3>✅ Conta criada!</h3>
-<div id="feed"></div>
-</div>
-
-<script>
-let modo='phone',fotoBase=null;
-function go(n){
- document.querySelectorAll('.wizard').forEach(w=>w.style.display='none');
- document.getElementById('w'+n).style.display='block';
- if(n==5){
-  let nome=document.getElementById('nome').value;
-  let contato=modo=='phone'?document.getElementById('cc').value+' '+document.getElementById('phone').value:document.getElementById('email').value;
-  document.getElementById('resumo').innerHTML='Nome: '+nome+'<br>Contato: '+contato+'<br>Modo: '+modo+'<br>Selo: '+(contato.includes('869116478')?'Original 👑':'10k precisa')+'<br>Partilhar: Ativado';
- }
-}
-function nomeVal(){let v=document.getElementById('nome').value.trim(); if(v.length<2){alert('Escreve nome');return false;} return true;}
-function setM(m){
- modo=m;
- document.getElementById('tPhone').className=m=='phone'?'on':'';
- document.getElementById('tEmail').className=m=='email'?'on':'';
- document.getElementById('boxPhone').style.display=m=='phone'?'block':'none';
- document.getElementById('boxEmail').style.display=m=='email'?'block':'none';
-}
-function checkContato(){
- let ph=document.getElementById('phone').value.replace(/\D/g,'');
- let em=document.getElementById('email').value.trim();
- if(modo=='phone'){ if(ph.length<8){alert('Número inválido');return;} }
- else{ if(!em.includes('@')||!em.includes('.')){alert('Email inválido - ex: beljo@gmail.com');return;} }
- go(4);
-}
-function checkFinal(){
- let pw=document.getElementById('pass').value;
- if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){alert('Senha precisa letras+números min 6');return;}
- if(!fotoBase){alert('Escolhe foto');return;}
- go(5);
-}
-document.getElementById('foto').addEventListener('change',e=>{
- let f=e.target.files[0]; if(!f)return;
- let r=new FileReader(); r.onload=ev=>{fotoBase=ev.target.result; let im=document.getElementById('prev'); im.src=fotoBase; im.style.display='block';}; r.readAsDataURL(f);
-});
-function criar(){
- let nome=document.getElementById('nome').value.trim();
- let ph=document.getElementById('phone').value.replace(/\D/g,'');
- let em=document.getElementById('email').value.trim().toLowerCase();
- let pw=document.getElementById('pass').value;
- let cc=document.getElementById('cc').value;
- let full=modo=='phone'?cc+' '+ph:em;
- let idc=modo=='phone'?ph:em;
- let users=JSON.parse(localStorage.getItem('bell_final')||'[]');
- if(ph.includes('869116478')&&users.some(u=>u.full.replace(/\D/g,'').includes('869116478'))){alert('869116478 já é do dono');return;}
- let novo={id:Date.now(),name:nome,full:full,idContato:idc,pass:pw,foto:fotoBase,owner:ph.includes('869116478')||em.includes('dono'),followers:ph.includes('869116478')?15000:0};
- users.push(novo); localStorage.setItem('bell_final',JSON.stringify(users));
- document.getElementById('app').style.display='block';
- document.getElementById('feed').innerHTML=`
- <div style="text-align:center"><img src="${fotoBase}" style="width:90px;height:90px;border-radius:50%"><h2>${nome} ${novo.owner?'👑 <span style="background:#20D5EC;padding:2px 6px;border-radius:50%;font-size:12px">✓</span>':''}</h2><p style="color:#666">${full} - ${modo}</p></div>
- <div style="margin-top:16px;background:#111;padding:12px;border-radius:12px"><p>🎬 Vídeo exemplo com partilhar</p><div style="display:flex;gap:8px;margin-top:8px"><button class="btn2" style="flex:1" onclick="navigator.clipboard.writeText('https://bellapp.com/${idc}').then(()=>alert('Link copiado'))">📋 Copiar link</button><button class="btn2" style="flex:1" onclick="window.open('https://wa.me/?text='+encodeURIComponent('https://bellapp.com/${idc}'))">💬 WhatsApp</button></div></div>
- `;
- document.querySelectorAll('.wizard').forEach(w=>w.style.display='none');
-}
-</script>
-</body></html><!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BellApp Simples</title>
-<style>body{background:#000;color:#fff;font-family:system-ui;padding:16px;margin:0}input,select,button{width:100%;padding:14px;border-radius:12px;margin-top:10px;font-size:16px;border:1px solid #333;background:#111;color:#fff}button{background:#fff;color:#000;font-weight:900;border:0}.box{border:1px solid #222;border-radius:16px;padding:14px;margin-top:14px}.small{color:#666;font-size:12px}</style></head><body>
-<h2>BellApp 🔔 - Simples que funciona</h2>
-
-<div class="box">
-<span class="small">CONTA NOVA - ESCREVE TUDO AQUI</span>
-<input id="nome" placeholder="Nome da conta - ex: Beljo">
-
-<select id="cc">
-<option value="+258">🇲🇿 +258 Moçambique</option>
-<option value="+55">🇧🇷 +55 Brasil</option>
-<option value="+351">🇵🇹 +351 Portugal</option>
-<option value="+1">🇺🇸 +1 EUA</option>
-<option value="+244">🇦🇴 +244 Angola</option>
-<option value="+27">🇿🇦 +27 Africa Sul</option>
-<option value="+44">🇬🇧 +44 UK</option>
-<option value="+33">🇫🇷 +33 FR</option>
-<option value="+49">🇩🇪 +49 DE</option>
-<option value="+34">🇪🇸 +34 ES</option>
-<option value="+91">🇮🇳 +91 India</option>
-<option value="+86">🇨🇳 +86 China</option>
-<option value="+81">🇯🇵 +81 Japão</option>
-<option value="+234">🇳🇬 +234 Nigeria</option>
-<option value="+254">🇰🇪 +254 Quênia</option>
-<option value="+260">🇿🇲 +260 Zâmbia</option>
-<option value="+263">🇿🇼 +263 Zimbábue</option>
-</select>
-
-<input id="phone" placeholder="Número - ex: 869116478">
-<input id="email" placeholder="OU Email - ex: beljo@gmail.com">
-<input id="pass" type="password" placeholder="Senha - letras + números min 6">
-<input id="foto" type="file" accept="image/*">
-<img id="prev" style="width:70px;height:70px;border-radius:50%;display:none;margin-top:10px;object-fit:cover">
 <p id="err" style="color:#ff4444;display:none"></p>
-<button onclick="criarConta()">CRIAR CONTA</button>
+<button class="btn" onclick="criar()">CRIAR CONTA E AVANÇAR →</button>
 </div>
 
 <div class="box">
-<span class="small">RECUPERAR CONTA - O QUE É?</span>
-<p style="font-size:13px;color:#aaa">É para quem já tem conta e esqueceu. Escreve número ou email + senha que usou</p>
-<input id="recContato" placeholder="Número ou Email da conta antiga">
-<input id="recSenha" type="password" placeholder="Senha que usou antes">
-<p id="recErr" style="color:#ff4444;display:none"></p>
-<button onclick="recuperar()" style="background:#222;color:#fff;border:1px solid #333">ENTRAR NA CONTA ANTIGA</button>
-
-<p style="text-align:center;margin-top:12px;color:#ff4444;font-weight:800" onclick="mostrarPerdeu()">Perdeu senha?? Clique aqui →</p>
-
-<div id="perdeuBox" style="display:none;border-top:1px solid #222;margin-top:12px;padding-top:12px">
-<p style="font-size:13px">Escolhe como receber código de 6 dígitos:</p>
-<button onclick="enviar('SMS')" style="background:#222;color:#fff;border:1px solid #333">📩 SMS</button>
-<button onclick="enviar('WhatsApp')" style="background:#222;color:#fff;border:1px solid #333">💬 WhatsApp</button>
-<button onclick="enviar('Chamada')" style="background:#222;color:#fff;border:1px solid #333">📞 Chamada</button>
-<button onclick="enviar('Email')" style="background:#222;color:#fff;border:1px solid #333">📧 Email</button>
-<div id="codeBox" style="display:none;margin-top:10px">
-<div id="codeShow" style="background:#fff;color:#000;padding:12px;text-align:center;font-weight:900;letter-spacing:6px;border-radius:10px">------</div>
-<input id="codeInput" placeholder="Escreve código aqui" maxlength="6">
-<button onclick="confirmar()">Confirmar código</button>
-<div id="newPassBox" style="display:none">
-<input id="newPass" type="password" placeholder="Nova senha">
-<button onclick="salvarNova()">Salvar nova senha</button>
-</div>
+<span class="s">Recuperar conta - só número e senha</span>
+<input id="recC" class="input" placeholder="Teu número ou email que usaste pra criar conta">
+<input id="recS" class="input" type="password" placeholder="Senha">
+<button class="btn2" onclick="entrar()">ENTRAR</button>
+<p style="text-align:center;color:#ff4444;margin-top:12px;font-weight:800;cursor:pointer" onclick="abrirPerdeu()">Esqueceu senha??? Clique aqui →</p>
+<div id="perdeu" style="display:none;border-top:1px solid #222;margin-top:12px;padding-top:12px">
+<p style="font-size:12px;color:#aaa">Vamos mandar código só pro contato que usaste pra criar conta: <b id="destInfo" style="color:#fff"></b></p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn2" onclick="enviar('SMS')">📩 SMS</button><button class="btn2" onclick="enviar('WhatsApp')">💬 WhatsApp</button><button class="btn2" onclick="enviar('Chamada')">📞 Chamada</button><button class="btn2" onclick="enviar('Email')">📧 Email</button></div>
+<div id="cBox" style="display:none;margin-top:12px"><div id="cShow" style="background:#fff;color:#000;padding:14px;text-align:center;font-weight:900;letter-spacing:6px;border-radius:12px">------</div><input id="cIn" class="input" placeholder="Código 6 dígitos"><button class="btn2" onclick="conf()">Confirmar código</button><div id="npBox" style="display:none"><input id="np" class="input" type="password" placeholder="Nova senha"><button class="btn" onclick="saveNp()">Salvar nova senha</button></div></div>
 </div>
 </div>
 </div>
 
-<div id="app" style="display:none;margin-top:20px;border-top:1px solid #333;padding-top:16px">
-<h3>✅ Entrou!</h3>
-<div id="feed"></div>
-<button onclick="location.reload()" style="background:#222;color:#fff;border:1px solid #333;margin-top:16px">Sair / Criar outra</button>
+<div id="app">
+<div class="top"><b onclick="showP('home')">BellApp 🔔</b><span style="font-size:12px" id="topInfo"></span><span onclick="showP('eu')" style="cursor:pointer">👤 Eu</span></div>
+<div class="screen">
+<div id="p-home" class="page on"></div>
+<div id="p-relogio" class="page"><h3>Relógio 🕒 - Atividade</h3><div id="notifs"></div></div>
+<div id="p-plus" class="page"><h3>+ Postar Vídeo</h3><input id="leg" class="input" placeholder="Legenda..."><button class="btn2" onclick="postar()">Postar Agora - Avança</button><div id="myPosts"></div></div>
+<div id="p-eu" class="page"></div>
+</div>
+<div class="bottom">
+<div class="b on" id="b-home" onclick="showP('home')">⌂<br><span style="font-size:10px">Casinha</span></div>
+<div class="b" id="b-relogio" onclick="showP('relogio')">◷<br><span style="font-size:10px">Relógio</span></div>
+<div class="b" id="b-plus" onclick="showP('plus')" style="background:#fff;color:#000;border-radius:12px;margin:0 8px;padding:6px 0">+<br><span style="font-size:10px">Postar</span></div>
+<div class="b" id="b-eu" onclick="showP('eu')">👤<br><span style="font-size:10px">Eu - Editar</span></div>
+</div>
 </div>
 
 <script>
-let fotoBase=null,codigo='',recUser=null;
-document.getElementById('foto').onchange=e=>{
- let f=e.target.files[0]; if(!f)return;
- let r=new FileReader(); r.onload=ev=>{fotoBase=ev.target.result; let im=document.getElementById('prev'); im.src=fotoBase; im.style.display='block';}; r.readAsDataURL(f);
-};
+let modo='phone',fotoBase=null,codigo='',recU=null,current=null,posts=[];
+function setM(m){modo=m;document.getElementById('tP').className=m=='phone'?'on':'';document.getElementById('tE').className=m=='email'?'on':'';document.getElementById('bP').style.display=m=='phone'?'block':'none';document.getElementById('bE').style.display=m=='email'?'block':'none';}
+document.getElementById('foto').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=v=>{fotoBase=v.target.result;let im=document.getElementById('prev');im.src=fotoBase;im.style.display='block';};r.readAsDataURL(f);};
+function showP(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));document.getElementById('p-'+p).classList.add('on');document.querySelectorAll('.b').forEach(x=>x.classList.remove('on'));document.getElementById('b-'+p).classList.add('on'); if(p=='home')renderHome(); if(p=='eu')renderEu(); if(p=='relogio')renderNotifs();}
 
-function criarConta(){
- let nome=document.getElementById('nome').value.trim();
- let ph=document.getElementById('phone').value.replace(/\D/g,'');
- let em=document.getElementById('email').value.trim().toLowerCase();
- let pw=document.getElementById('pass').value;
- let cc=document.getElementById('cc').value;
- let err=document.getElementById('err');
- err.style.display='none';
- if(!nome){err.textContent='Escreve nome'; err.style.display='block'; return;}
- if(!fotoBase){err.textContent='Escolhe foto'; err.style.display='block'; return;}
- if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){err.textContent='Senha letras+números min 6'; err.style.display='block'; return;}
- let full='',idc='';
- if(em&&em.includes('@')){ full=em; idc=em; }
- else if(ph.length>=8){ full=cc+' '+ph; idc=ph; }
- else{ err.textContent='Escreve número OU email'; err.style.display='block'; return; }
-
- let users=JSON.parse(localStorage.getItem('bell_final_simple')||'[]');
- if(idc.includes('869116478')&&users.some(u=>u.idc.includes('869116478'))){err.textContent='869116478 já é do dono'; err.style.display='block'; return;}
- let isDono=idc.includes('869116478');
- let novo={id:Date.now(),name:nome,full:full,idc:idc,pass:pw,foto:fotoBase,owner:isDono,followers:isDono?15000:0,nomeChanged:Date.now()};
- users.push(novo); localStorage.setItem('bell_final_simple',JSON.stringify(users));
- mostrarApp(novo);
+function criar(){
+let n=document.getElementById('nome').value.trim(),bio=document.getElementById('bio').value.trim(),ph=document.getElementById('phone').value.replace(/\D/g,''),em=document.getElementById('email').value.trim().toLowerCase(),pw=document.getElementById('pass').value,cc=document.getElementById('cc').value,err=document.getElementById('err');
+err.style.display='none';
+if(n.length<2){err.textContent='Nome obrigatório';err.style.display='block';return;}
+if(!fotoBase){err.textContent='Foto obrigatória';err.style.display='block';return;}
+if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){err.textContent='Senha letras+números min 6';err.style.display='block';return;}
+let full='',idc='',tipo='';if(modo=='email'){if(!em.includes('@')){err.textContent='Email inválido';err.style.display='block';return;}full=em;idc=em;tipo='email';}else{if(ph.length<8){err.textContent='Número inválido';err.style.display='block';return;}full=cc+' '+ph;idc=ph;tipo='phone';}
+let users=JSON.parse(localStorage.getItem('bell_final_dono')||'[]');
+// Só 1 dono
+if(idc.includes('869116478')&&users.some(u=>u.idc.includes('869116478'))){err.textContent='869116478 já é dono único! Ninguém mais pode ser dono';err.style.display='block';return;}
+let isDono=idc.includes('869116478');
+let novo={id:Date.now(),name:n,bio:bio||'BellApp 🔔',full:full,idc:idc,tipo:tipo,pass:pw,foto:fotoBase,owner:isDono,followers:isDono?15000:0,following:0,likes:0,selo:isDono?true:false,nomeData:Date.now()};
+users.push(novo);localStorage.setItem('bell_final_dono',JSON.stringify(users));
+openApp(novo);
 }
+function openApp(u){current=u;document.getElementById('auth').style.display='none';document.getElementById('app').style.display='flex';document.getElementById('topInfo').textContent=u.owner?'👑 DONO - Selo Original ✓':'Selo: '+(u.selo?'Original ✓':u.followers>=10000?'Pode pedir':'Precisa 10k');posts=JSON.parse(localStorage.getItem('bell_posts_'+u.id)||'[]');renderHome();renderEu();}
 
-function mostrarApp(u){
- document.getElementById('app').style.display='block';
- document.getElementById('feed').innerHTML=`
- <div style="text-align:center"><img src="${u.foto}" style="width:90px;height:90px;border-radius:50%"><h2>${u.name} ${u.owner?'👑 <span style="background:#20D5EC;padding:2px 6px;border-radius:50%">✓</span>':''}</h2><p style="color:#666">${u.full}</p><p style="font-size:11px;color:#555">Nome só muda a cada 3 meses - travado</p></div>
- <div style="margin-top:16px;background:#111;padding:12px;border-radius:12px"><b>🎬 Post com partilhar</b><div style="display:flex;gap:8px;margin-top:8px"><button onclick="navigator.clipboard.writeText('https://bellapp.com/${u.idc}').then(()=>alert('Link copiado!'))" style="background:#222;color:#fff;border:1px solid #333">📋 Copiar</button><button onclick="window.open('https://wa.me/?text='+encodeURIComponent('https://bellapp.com/${u.idc}'))" style="background:#222;color:#fff;border:1px solid #333">💬 WhatsApp</button></div></div>
- `;
- window.scrollTo(0,document.body.scrollHeight);
+function renderHome(){
+let html=`<div style="display:flex;gap:10px;align-items:center"><img src="${current.foto}" style="width:50px;height:50px;border-radius:50%"><div><b>${current.name} ${current.selo?'<span style="background:#1DA1F2;padding:1px 5px;border-radius:50%;font-size:10px;color:#fff">✓</span>':''} ${current.owner?'👑 DONO':''}</b><br><span style="font-size:11px;color:#666">${current.bio} - ${current.followers} seguidores</span></div></div>`;
+if(current.followers>=10000&&!current.selo&&!current.owner){html+=`<button class="btn2" onclick="pedirSelo()">Pedir selo original - tens 10k</button>`;}
+posts.forEach((p,i)=>{
+html+=`<div class="vcard"><b>${p.leg}</b><div style="height:120px;background:#222;border-radius:12px;margin:8px 0;display:flex;align-items:center;justify-content:center;color:#555">🎬 Vídeo ${i+1}</div><div style="display:flex;gap:8px"><span class="act" onclick="curtir(${i})">❤️ ${p.likes||0} Curtir</span><span class="act" onclick="comentar(${i})">💬 ${p.comments? p.comments.length:0} Comentar</span><span class="act" onclick="partilhar(${i})">↗️ Partilhar</span><span class="act" onclick="seguir()">👤 Seguir</span></div><div id="coms-${i}" style="margin-top:8px;font-size:12px;color:#aaa">${p.comments? p.comments.map(c=>'<div>• '+c+'</div>').join(''):''}</div></div>`;
+});
+if(posts.length==0)html+=`<div class="vcard" style="text-align:center;color:#666">Nenhum vídeo ainda. Clica + Postar - todos botões funcionam</div>`;
+document.getElementById('p-home').innerHTML=html;
 }
-
-function recuperar(){
- let ct=document.getElementById('recContato').value.trim().toLowerCase();
- let pw=document.getElementById('recSenha').value;
- let users=JSON.parse(localStorage.getItem('bell_final_simple')||'[]');
- let ach=users.find(u=>u.full.toLowerCase()==ct||u.idc.toLowerCase()==ct);
- let err=document.getElementById('recErr');
- err.style.display='none';
- if(!ach){err.textContent='Conta não encontrada'; err.style.display='block'; return;}
- if(ach.pass!=pw){err.textContent='Senha errada - clica Perdeu senha??'; err.style.display='block'; recUser=ach; return;}
- mostrarApp(ach);
-}
-function mostrarPerdeu(){document.getElementById('perdeuBox').style.display='block'; let ct=document.getElementById('recContato').value.trim(); let users=JSON.parse(localStorage.getItem('bell_final_simple')||'[]'); recUser=users.find(u=>u.full.toLowerCase()==ct.toLowerCase()||u.idc.toLowerCase()==ct.toLowerCase())||null; if(!recUser){alert('Primeiro escreve número ou email da conta que queres recuperar em cima');}}
-function enviar(t){codigo=Math.floor(100000+Math.random()*900000).toString(); document.getElementById('codeBox').style.display='block'; document.getElementById('codeShow').textContent=codigo; alert('Código '+codigo+' enviado por '+t+' (simulação)');}
-function confirmar(){let inp=document.getElementById('codeInput').value; if(inp==codigo){document.getElementById('newPassBox').style.display='block';}else{alert('Código errado - certo é '+codigo);}}
-function salvarNova(){let np=document.getElementById('newPass').value; if(np.length<6||!/\d/.test(np)||!/[a-zA-Z]/.test(np)){alert('Senha min 6 letras+números');return;} if(!recUser){alert('Recupera primeiro');return;} let users=JSON.parse(localStorage.getItem('bell_final_simple')||'[]'); users=users.map(u=>{if(u.id==recUser.id)u.pass=np;return u;}); localStorage.setItem('bell_final_simple',JSON.stringify(users)); alert('Nova senha salva! Agora entra com ela'); document.getElementById('perdeuBox').style.display='none';}
-</script>
-</body></html>
+function renderEu(){
+let podeMudarNome=Date.now()-current.nomeData>90*24*60*60*1000;
+document.getElementById('p-eu').innerHTML=`<div style="text-align:center"><img src="${current.foto}" style="width:90px;height:90px;border-radius:50%"><h2>${current.name} ${current.selo?'<span style="background:#1DA1F2;padding:2px 7px;border-radius:50%;font-size:12px;color:#fff">✓</span>':''}</h2><p style="color:#666">${current.full} - ${current.tipo}</p><p style="font-size:12px;color:#aaa">${current.bio}</p><p style="font-size:11px;color:#555">Selo original TikTok: ${current.selo?'SIM ✓':current.owner?'SIM DONO 👑':`Precisa 10k - tens ${current.followers}`}<br>${current.owner?'Dono único BellApp - Ninguém pode se disfarçar de dono':''}</p></div>
+<

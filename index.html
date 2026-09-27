@@ -1,72 +1,104 @@
-                                            <!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BellApp</title>
+
+<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BellApp Oficial</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#000;color:#fff;height:100vh;display:flex;flex-direction:column}
-.top{height:50px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;border-bottom:1px solid #222}
-.screen{flex:1;overflow:auto}
-.page{display:none;height:100%}.page.active{display:block}
-.bottom{height:60px;border-top:1px solid #222;display:flex;justify-content:space-around;align-items:center}
-.b-item{color:#666;font-size:10px;text-align:center;flex:1}.b-item.on{color:#fff}
-.b-item i{font-size:22px;display:block}
-.auth{position:fixed;inset:0;background:#000;z-index:99;padding:24px}
-.input{width:100%;background:#111;border:1px solid #333;color:#fff;padding:14px;border-radius:12px;margin-top:12px;font-size:16px}
-.btn{background:#fff;color:#000;border:0;padding:14px;border-radius:24px;font-weight:700;width:100%;margin-top:16px;font-size:16px}
-.badge{background:#00aaff;color:#fff;font-size:11px;padding:3px 8px;border-radius:12px;margin-left:6px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,sans-serif}
+body{background:#000;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.top{height:52px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;border-bottom:1px solid #1a1a1a}
+.screen{flex:1;overflow:hidden;position:relative}.page{display:none;height:100%;overflow-y:auto}.page.active{display:flex;flex-direction:column}
+.bottom{height:68px;background:#000;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;align-items:center;padding-bottom:6px}
+.b-item{color:#666;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}.b-item.on{color:#fff}.b-item i{font-size:26px;font-style:normal}
+.b-item.plus i{background:#fff;color:#000;width:44px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900}
+.auth{position:fixed;inset:0;background:#000;z-index:100;padding:22px;overflow-y:auto}
+.input{width:100%;background:#121212;border:1px solid #2a2a2a;color:#fff;padding:14px;border-radius:12px;margin-top:12px;font-size:16px}
+.btn{background:#fff;color:#000;border:0;padding:14px;border-radius:28px;font-weight:800;width:100%;margin-top:14px}
+.btn2{background:#121212;border:1px solid #333;color:#fff;padding:13px;border-radius:28px;width:100%;margin-top:10px}
+.follow{background:#fff;color:#000;border:0;padding:8px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.follow.following{background:#2a2a2a;color:#fff;border:1px solid #333}
+.v-badge{width:20px;height:20px;background:#20D5EC;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900;margin-left:5px;border:2px solid #000;box-shadow:0 0 0 1px #20D5EC}
+.video-card{width:100%;height:76vh;background:#0a0a0a;position:relative;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #111;flex-shrink:0}
+.video-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#111}
+.video-thumb{background:#111;aspect-ratio:9/14;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#444;font-size:11px;position:relative}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;display:none;align-items:flex-end}.modal-box{background:#121212;width:100%;border-radius:20px 20px 0 0;padding:20px;max-height:85vh;overflow-y:auto}
+.opt{padding:13px;background:#1a1a1a;border-radius:12px;margin-top:9px;display:flex;justify-content:space-between;border:1px solid #222}
+.live-dot{width:8px;height:8px;background:#ff0033;border-radius:50%;display:inline-block;animation:blink 1s infinite}@keyframes blink{50%{opacity:0}}
 </style></head><body>
-<div class="top"><b>BellApp 🔔</b><b onclick="showP('search')" style="font-size:20px">🔍</b></div>
+<div class="top"><b>BellApp 🔔</b><div><span onclick="openSearch()" style="padding:8px">🔍</span> <span onclick="showP('msg')" style="padding:8px">💬</span></div></div>
 <div class="screen">
-<div id="p-home" class="page active" style="padding:20px;text-align:center;color:#666">Carregando...</div>
-<div id="p-search" class="page" style="padding:20px"><input id="sAll" class="input" placeholder="Pesquisar..." style="margin:0"><div style="margin-top:20px;color:#555">Pesquisa em Beira</div></div>
-<div id="p-msg" class="page"><div style="padding:16px"><h3>Mensagens</h3><p style="color:#555;font-size:13px;margin-top:8px">Atividade + Bate-papo tipo TikTok</p></div><div id="mList" style="padding:10px"></div></div>
-<div id="p-profile" class="page"><div style="padding:30px;text-align:center">
-<div style="width:90px;height:90px;background:linear-gradient(135deg,#00aaff,#aa00ff);border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;font-size:50px">👑</div>
-<h2 id="pN">Visitante</h2><p id="pH" style="color:#777;margin-top:4px"></p>
-<div id="offBadge" style="display:none;margin-top:16px;background:linear-gradient(90deg,#00aaff,#7a00ff);padding:12px;border-radius:24px;font-weight:700">👑 CONTA OFICIAL BellApp • Verificado ✅<br><span style="font-size:11px">+258 869116478 • Dono</span></div>
-<div style="margin-top:30px;color:#555;font-size:13px">Primeira conta da BellApp de Beira</div>
-<button onclick="localStorage.clear();location.reload()" style="margin-top:20px;background:#111;border:1px solid #333;color:#666;padding:10px 20px;border-radius:20px">Sair e testar de novo</button>
-</div></div>
+<div id="p-home" class="page active"></div>
+<div id="p-relogio" class="page"><div style="padding:16px"><h3>⏱️ Relógio</h3><p style="color:#666;font-size:12px">Tudo clicável</p></div><div id="relogioList"></div></div>
+<div id="p-search" class="page"><div style="padding:12px;display:flex;gap:8px"><input id="sAll" class="input" style="margin:0;flex:1" placeholder="Pesquisar..." oninput="doSearch(this.value)"><span style="padding:12px" onclick="showP('home')">✕</span></div><div id="sRes" style="padding:16px;color:#666"></div></div>
+<div id="p-msg" class="page"><div style="padding:16px"><h3>Mensagens</h3></div><div id="mList"></div></div>
+<div id="p-profile" class="page"><div id="profView"></div></div>
 </div>
 <div class="bottom">
-<div class="b-item on" id="b-home" onclick="showP('home')"><i>⌂</i>Casinha</div>
-<div class="b-item" id="b-msg" onclick="showP('msg')"><i>💬</i>Mensagem</div>
-<div class="b-item" id="b-profile" onclick="showP('profile')"><i>👤</i>Eu</div>
+<div class="b-item on" id="b-home" onclick="showP('home')"><i>⌂</i><small>Casinha</small></div>
+<div class="b-item" id="b-relogio" onclick="showP('relogio')"><i>◷</i><small>Relógio</small></div>
+<div class="b-item" onclick="openPublish()"><div class="plus"><i>+</i></div></div>
+<div class="b-item" id="b-profile" onclick="viewOwn()"><i>👤</i><small>Eu</small></div>
 </div>
 <div id="auth" class="auth">
-<h1 style="font-size:32px">BellApp 🔔</h1><p style="color:#777;margin-top:6px">Conta do Dono Oficial</p>
-<div style="display:flex;gap:8px;margin-top:20px"><select id="cc" class="input" style="width:110px;margin:0"><option value="+258">🇲🇿 +258</option><option value="+55">🇧🇷 +55</option><option value="+351">🇵🇹 +351</option></select><input id="phone" class="input" value="869116478" style="flex:1;margin:0"></div>
-<p style="color:#00aaff;font-size:12px;margin-top:8px">👑 Teu número oficial: 869116478</p>
-<input id="pass" class="input" type="tel" maxlength="6" placeholder="Senha 6 números ex: 123456">
-<p id="err" style="color:#ff4444;font-size:13px;margin-top:10px;display:none"></p>
-<button class="btn" onclick="doAuth()">Entrar como Dono 👑</button>
-<p style="color:#333;font-size:11px;text-align:center;margin-top:14px">Senha obrigatória: 6 números</p>
+<h1>BellApp 🔔</h1><p style="color:#777">Dono: 869116478</p>
+<div style="display:flex;gap:8px;margin-top:16px"><select id="cc" class="input" style="width:110px;margin:0"><option value="+258">🇲🇿 +258</option><option value="+55">🇧🇷 +55</option></select><input id="phone" class="input" style="flex:1;margin:0" value="869116478"></div>
+<input id="pass" class="input" type="password" placeholder="Senha segura letras+números min 6">
+<div style="margin-top:10px;display:flex;gap:10px;align-items:center"><img id="prevAv" style="width:56px;height:56px;border-radius:50%;background:#111;object-fit:cover;display:none"><label style="background:#121212;border:1px dashed #333;padding:10px 14px;border-radius:20px;font-size:13px;color:#aaa">📷 Foto obrigatória<input id="foto" type="file" accept="image/*" hidden onchange="loadFoto(this)"></label></div>
+<p id="err" style="color:#ff4d4d;display:none;margin-top:10px;font-size:13px"></p>
+<button class="btn" onclick="criarConta()">Criar conta</button><span style="color:#3b82f6;font-size:13px;text-align:center;margin-top:14px;display:block" onclick="openRecup()">Perdeu senha?</span>
 </div>
+<div id="pubModal" class="modal" onclick="if(event.target==this)closePub()"><div class="modal-box"><h3>Publicar</h3><input id="vidDesc" class="input" placeholder="Legenda..."><button class="btn" onclick="publicarVideo()">📹 Vídeo</button><button class="btn2" onclick="startLive()">🔴 LIVE (100 seguidores)</button><button class="btn2" onclick="closePub()">Fechar</button></div></div>
+<div id="recModal" class="modal" onclick="if(event.target==this)closeRec()"><div class="modal-box"><h3>Recuperar</h3><input id="recContato" class="input" placeholder="Número ou Email"><input id="recSenha" class="input" type="password" placeholder="Senha que lembra"><p id="recErr" style="color:#ff4d4d;display:none"></p><button class="btn2" onclick="tentarRecup()">Verificar</button><div id="recOps" style="display:none;margin-top:14px"><div class="opt" onclick="enviarCodigo('SMS')"><span>📩 SMS</span><span>›</span></div><div class="opt" onclick="enviarCodigo('WhatsApp')"><span>💬 WhatsApp</span><span>›</span></div><div class="opt" onclick="enviarCodigo('Chamada')"><span>📞 Chamada (automático)</span><span>›</span></div><div class="opt" onclick="enviarCodigo('Email')"><span>📧 Email</span><span>›</span></div><div id="codeBox" style="display:none;margin-top:14px"><div id="codeShow" style="background:#fff;color:#000;padding:12px;border-radius:10px;text-align:center;letter-spacing:6px;font-weight:900;font-size:22px">------</div><input id="codeInput" class="input" placeholder="Código" maxlength="6" style="text-align:center;letter-spacing:8px"><button class="btn" onclick="confirmarCodigo()">Confirmar</button></div></div><button class="btn2" onclick="closeRec()">Fechar</button></div></div>
+<div id="lupaModal" class="modal" onclick="if(event.target==this)closeLupa()"><div class="modal-box"><h3>🔍 Pesquisa - Tudo clicável</h3><input id="lupaIn" class="input" placeholder="Pesquisar..." oninput="doLupa(this.value)"><div id="lupaRes" style="margin-top:12px;color:#666"></div><button class="btn2" onclick="closeLupa()">Fechar</button></div></div>
 <script>
 const DONO='869116478';
+let fotoBase=null,codigoRec='',contatoRec='',viewingId=null;
+let users=JSON.parse(localStorage.getItem('bell_users')||'[]');
 let user=JSON.parse(localStorage.getItem('bell_u')||'null');
-function showP(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');document.querySelectorAll('.b-item').forEach(b=>b.classList.remove('on'));let el=document.getElementById('b-'+id);if(el)el.classList.add('on');}
-function doAuth(){
-let ph=document.getElementById('phone').value.replace(/\D/g,'');
-let pw=document.getElementById('pass').value.trim();
-let er=document.getElementById('err');
-if(ph.length<8){er.style.display='block';er.textContent='Número inválido';return;}
-if(!/^\d{6}$/.test(pw)){er.style.display='block';er.textContent='Senha precisa ter 6 NÚMEROS! Ex: 123456 (você digitou '+pw.length+' dígitos)';return;}
-let isOwner=ph.includes(DONO);
-let u={name:isOwner?'BellApp oficial':'+258 '+ph, full:'+258 '+ph, owner:isOwner, pass:pw};
-localStorage.setItem('bell_u',JSON.stringify(u));
-user=u;
-finish();
+let videos=JSON.parse(localStorage.getItem('bell_vids')||'[]');
+let atividades=JSON.parse(localStorage.getItem('bell_acts')||'[]');
+let follows=JSON.parse(localStorage.getItem('bell_follows')||'[]');
+function loadFoto(i){let r=new FileReader();r.onload=e=>{fotoBase=e.target.result;document.getElementById('prevAv').src=fotoBase;document.getElementById('prevAv').style.display='block'};r.readAsDataURL(i.files[0]);}
+function showP(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');document.querySelectorAll('.b-item').forEach(b=>b.classList.remove('on'));let el=document.getElementById('b-'+id);if(el)el.classList.add('on');if(id=='home')renderHome();if(id=='profile')renderProfile(viewingId?users.find(u=>u.id==viewingId):user);if(id=='relogio')renderRelogio();if(id=='msg')renderMsg();}
+function viewOwn(){viewingId=user?user.id:null;showP('profile');}
+function openSearch(){document.getElementById('lupaModal').style.display='flex';}function closeLupa(){document.getElementById('lupaModal').style.display='none';}
+function openPublish(){if(!user)return alert('Crie conta');document.getElementById('pubModal').style.display='flex';}function closePub(){document.getElementById('pubModal').style.display='none';}
+function openRecup(){document.getElementById('recModal').style.display='flex';}function closeRec(){document.getElementById('recModal').style.display='none';}
+function criarConta(){let ph=document.getElementById('phone').value.replace(/\D/g,''),pw=document.getElementById('pass').value,er=document.getElementById('err'),cc=document.getElementById('cc').value;if(!fotoBase){er.style.display='block';er.textContent='Foto obrigatória!';return;}if(ph.length<8){er.style.display='block';er.textContent='Número inválido';return;}if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){er.style.display='block';er.textContent='Senha segura: letras+números min 6';return;}if(ph.includes(DONO)){let ex=users.find(u=>(u.full||'').replace(/\D/g,'').includes(DONO));if(ex&&(!user||!user.owner)){er.style.display='block';er.textContent='⛔ 869116478 já é do dono!';return;}}let nome=ph.includes(DONO)?'BellApp oficial':'user'+ph.slice(-4);let novo={id:Date.now(),name:nome,full:cc+' '+ph,idContato:ph,pass:pw,foto:fotoBase,owner:ph.includes(DONO),followers:ph.includes(DONO)?95:Math.floor(Math.random()*80),following:120,bio:'Beira 🌊'};users=users.filter(u=>u.idContato!=ph);users.push(novo);localStorage.setItem('bell_users',JSON.stringify(users));user=novo;localStorage.setItem('bell_u',JSON.stringify(user));document.getElementById('auth').style.display='none';viewingId=user.id;renderProfile(user);renderHome();showP('profile');}
+function isVerified(u){if(!u)return false;if(u.owner||(u.full||'').replace(/\D/g,'').includes(DONO))return true;return (u.followers||0)>=10000;}
+function canLive(u){return (u.followers||0)>=100;}
+function isFollowing(targetId){return follows.some(f=>f.from==user.id&&f.to==targetId);}
+function toggleFollow(targetId){if(!user)return alert('Crie conta');if(targetId==user.id){alert('É seu próprio perfil! Mas botão Seguir aparece mesmo no seu, como pediu.');return;}let idx=follows.findIndex(f=>f.from==user.id&&f.to==targetId);let target=users.find(u=>u.id==targetId);if(idx>=0){follows.splice(idx,1);target.followers=Math.max(0,(target.followers||0)-1);}else{follows.push({from:user.id,to:targetId});target.followers=(target.followers||0)+1;atividades.unshift({text:`Você seguiu ${target.name}`,time:'agora'});localStorage.setItem('bell_acts',JSON.stringify(atividades));}localStorage.setItem('bell_follows',JSON.stringify(follows));localStorage.setItem('bell_users',JSON.stringify(users));if(target.id==user.id){user.followers=target.followers;localStorage.setItem('bell_u',JSON.stringify(user));}renderProfile(target);renderRelogio();}
+function renderProfile(u){if(!u){document.getElementById('profView').innerHTML='<div style=padding:40px;text-align:center;color:#555>Sem conta</div>';return;}viewingId=u.id;let meus=videos.filter(v=>v.ownerId==u.id);let total=meus.reduce((s,v)=>s+(v.likes||0),0);let ver=isVerified(u);let liveOk=canLive(u);let following=isFollowing(u.id);let isOwn=user&&u.id==user.id;
+document.getElementById('profView').innerHTML=`
+<div style="padding:20px;text-align:center">
+<img src="${u.foto}" style="width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid #222;cursor:pointer" onclick="alert('Foto clicável: ${u.name}')">
+<h2 style="margin-top:12px;cursor:pointer" onclick="alert('Nome clicável: ${u.name}')">${u.name} ${ver?'<span class=v-badge>✓</span>':''} ${u.owner?'👑':''}</h2>
+<p style="color:#777;font-size:13px;cursor:pointer" onclick="alert('Contato clicável: ${u.full}')">${u.full} ${u.owner?'• Dono oficial':''}</p>
+<div style="display:flex;justify-content:center;gap:24px;margin-top:16px">
+<div style="cursor:pointer" onclick="alert('Seguindo clicável: ${u.following}')"><b>${u.following}</b><br><span style="color:#777;font-size:11px">Seguindo</span></div>
+<div style="cursor:pointer" onclick="alert('Seguidores clicável: ${u.followers}')"><b>${u.followers}</b><br><span style="color:#777;font-size:11px">Seguidores</span></div>
+<div style="cursor:pointer" onclick="alert('Curtidas totais clicável: ${total}')"><b>${total}</b><br><span style="color:#777;font-size:11px">Curtidas</span></div>
+</div>
+<div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+<button class="follow ${following?'following':''}" onclick="toggleFollow(${u.id})">${isOwn? (following?'Seguindo • Eu':'Seguir • Eu') : (following?'Seguindo':'Seguir')}</button>
+<button class="btn2" style="width:auto;padding:8px 16px" onclick="alert('Mensagem clicável para ${u.name}')">💬 Mensagem</button>
+<button class="btn2" style="width:auto;padding:8px 16px" onclick="startLive()">🔴 LIVE</button>
+</div>
+${u.owner?'<div style="margin-top:12px;background:linear-gradient(90deg,#00c6ff,#0072ff);padding:10px;border-radius:20px;font-weight:700;font-size:12px;cursor:pointer" onclick="alert(\'Selo oficial original clicável!\')">👑 CONTA OFICIAL • Selo Original TikTok/IG/Facebook 🔵✓</div>':''}
+${ver&&!u.owner?'<div style="margin-top:12px;background:#111;border:1px solid #20D5EC;padding:8px;border-radius:20px;font-size:12px;cursor:pointer" onclick="alert(\'Selo original 10k clicável\')">🔵 Verificado • 10k seguidores • Selo Original ✓</div>':''}
+${!ver?'<p style="color:#666;font-size:11px;margin-top:8px">Faltam ${10000-u.followers} seguidores para selo azul original</p>':''}
+${!liveOk?'<p style="color:#ff4444;font-size:11px;margin-top:6px">LIVE bloqueada: precisa 100 seguidores (${u.followers}/100)</p>':''}
+<div style="margin-top:12px"><button class="btn2" style="width:auto;padding:6px 14px;font-size:11px" onclick="addSeguidores(${u.id})">+ Seguidores teste</button></div>
+</div>
+<div style="display:flex;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a"><div style="flex:1;text-align:center;padding:12px;border-bottom:2px solid #fff;cursor:pointer">🎬 ${meus.length}</div><div style="flex:1;text-align:center;padding:12px;color:#555;cursor:pointer" onclick="alert('Lives clicável')">🔴 Lives</div><div style="flex:1;text-align:center;padding:12px;color:#555;cursor:pointer" onclick="alert('Curtidas clicável')">❤️ ${total}</div></div>
+${meus.length?'<div class=video-grid>'+meus.map(v=>`<div class=video-thumb style=cursor:pointer onclick="alert('Vídeo clicável: ${v.desc}')"><div style=position:absolute;bottom:6px;left:6px;color:#fff;font-size:10px>❤️${v.likes}</div>${v.isLive?'<div style=position:absolute;top:6px;left:6px;background:#ff0033;color:#fff;font-size:8px;padding:2px 5px;border-radius:4px><span class=live-dot></span> LIVE</div>':''}🎥<br>${v.desc.slice(0,10)}</div>`).join('')+'</div>':'<div style="padding:50px;text-align:center;color:#444">🎬 Nenhum vídeo ainda<br><span style="font-size:11px">(em branco quando não tem, como pediu)</span></div>'}
+`;
 }
-function finish(){
-document.getElementById('auth').style.display='none';
-document.getElementById('pN').innerHTML=user.name+(user.owner?' <span class=badge>✓</span> 👑':'');
-document.getElementById('pH').textContent=user.full;
-document.getElementById('offBadge').style.display=user.owner?'block':'none';
-document.getElementById('p-home').innerHTML='<div style=text-align:center;padding:40px 20px><div style=font-size:60px>👑</div><h2 style=color:#fff>Bem-vindo Dono!</h2><p style=color:#777;margin-top:10px>Você é a primeira conta oficial<br><b style=color:#fff>'+user.name+' ✓</b><br>'+user.full+'</p><div style=margin-top:20px;background:#111;padding:14px;border-radius:14px;text-align:left><b>✅ BellApp funcionando!</b><br><span style=color:#777;font-size:13px>• Casinha<br>• Mensagem (Atividade + Bate-papo)<br>• Eu com coroa e verificado<br>• Conta oficial: '+user.full+'</span></div></div>';
-document.getElementById('mList').innerHTML='<div style=background:#111;padding:14px;border-radius:12px;display:flex;gap:10px;align-items:center><div style=width:40px;height:40px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center>🔔</div><div><b>Atividade</b><div style=color:#777;font-size:13px>beljo começou a seguir você • a 1h</div></div></div><div style=margin-top:10px;background:#111;padding:14px;border-radius:12px;display:flex;gap:10px><div style=width:40px;height:40px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center>👤</div><div><b>beljo</b> <span style=color:#555;font-size:11px>a 1h</span><div style=color:#777;font-size:13px>E aí dono, app tá top! 🔥</div></div></div>';
-showP('profile');
-}
-if(user){finish();}
-</script>
-</body></html>                                                                   
+function addSeguidores(id){let target=users.find(u=>u.id==id)||user;target.followers+=500;if(target.id==user.id){user.followers=target.followers;localStorage.setItem('bell_u',JSON.stringify(user));}localStorage.setItem('bell_users',JSON.stringify(users));renderProfile(target);if(isVerified(target)&&target.followers>=10000&&target.followers<10500)alert('🎉 '+target.name+' ganhou selo azul original ✓ 10k!');}
+function startLive(){if(!user)return;if(!canLive(user)){alert('⛔ LIVE precisa 100 seguidores\nVocê: '+user.followers+'/100\nAté dono precisa!');return;}let desc=prompt('Título LIVE:')||'LIVE Beira 🔴';let novo={id:Date.now(),ownerId:user.id,userName:user.name,userFoto:user.foto,desc:desc,likes:0,isLive:true,verified:isVerified(user)};videos.unshift(novo);localStorage.setItem('bell_vids',JSON.stringify(videos));atividades.unshift({text:`${user.name} LIVE: ${desc}`,time:'agora'});localStorage.setItem('bell_acts',JSON.stringify(atividades));closePub();renderHome();showP('home');alert('🔴 AO VIVO!');}
+function publicarVideo(){let desc=document.getElementById('vidDesc').value||'Beira 🔥';let novo={id:Date.now(),ownerId:user.id,userName:user.name,userFoto:user.foto,desc:desc,likes:Math.floor(Math.random()*500),verified:isVerified(user),isLive:false};videos.unshift(novo);localStorage.setItem('bell_vids',JSON.stringify(videos));atividades.unshift({text:`Você publicou: ${desc}`,time:'agora'});localStorage.setItem('bell_acts',JSON.stringify(atividades));closePub();renderHome();showP('home');}
+function renderHome(){let c=document.getElementById('p-home');if(videos.length==0){c.innerHTML=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;color:#555"><div style="font-size:60px">🎬</div><h3 style="color:#fff">Casinha</h3><p>Vídeos para assistir</p><button class="btn" style="max-width:200px" onclick="openPublish()">+ Publicar</button></div>`;return;}c.innerHTML=videos.map(v=>`<div class=video-card><div style=text-align:center><div style=font-size:48px>${v.isLive?'🔴':'▶️'}</div><p style=margin-top:10px;font-weight:700;cursor:pointer" onclick="viewProfile(${v.ownerId})">${v.userName} ${v.verified?'<span class=v-badge>✓</span>':''}</p><p style=color:#aaa;font-size:13px>${v.desc}</p></div><div style=position:absolute;right:12px;bottom:80px;display:flex;flex-direction:column;gap:16px;align-items:center><img src="${v.userFoto}" style="width:46px;height:46px;border-radius:50%;border:2px solid #fff;cursor:pointer" onclick="viewProfile(${v.ownerId})"><div style="cursor:pointer">❤️<br><small>${v.likes}</small></div></div></div>`).join('');}
+function viewProfile(id){let u=users.find(x=>x.id==id);if(!u)return;renderProfile(u);showP('profile');}
+function renderRelogio(){document.getElementById('relogioList').innerHTML=atividades.length?atividades.map(a=>`<div style="padding:14px;border-bottom:1px solid #111;display:flex;gap:10px;cursor:pointer" onclick="alert('Atividade clicável: ${a.text}')"><div style="width:36px;height:36px;background:#111;border-radius:50%;display:flex;align-items:center;justify-content:center">🔔</div><div><div style="font-size:14px">${a.text}</div><div style="color:#555;font-size:11px">${a.time}</div></div></div>`).join(''):'<div style="text-align:center;padding:40px;color:#555">⏱️ Vazio - clicável</div>';}
+function renderMsg(){document.getElementById('mList').innerHTML='<div style="padding:14px;border-bottom:1px solid #111;cursor:pointer" onclick="alert(\'Mensagem clicável\')">🔔 Atividade • beljo a 1h</div><div style="padding:14px;border-bottom:1px solid #111;cursor:pointer" onclick="viewProfile(users[0]?.id)">💬 Mensagem clicável</div>';}
+function doSearch(q){document.getElementById('sRes').innerHTML=q?`Buscando "${q}" - clicável`:'Digite...';}
+function doLupa(q){let r=document.getElementById('lupaRes');if(!q){r.innerHTML='Tudo clicável - digite';return;}let f=users.filter(u=>u.name.toLowerCase().includes(q.toLowerCase()));r.innerHTML=f.length?f.map(u=>`<div style="padding:10px;border-bottom:1px solid #111;display:flex;gap:10px;cursor:pointer" onclick="viewProfile(${u.id});closeLupa();"><img src="${u.foto}" style="width:36px;height:36px;border-radius:50%"><div><b>${u.name} ${isVerified(u)?'<span class=v-badge>✓</span>':''}</b><div style="color:#666;font-size:11px">${u.followers} seguidores • Seguir clicável</div></div></div>`)

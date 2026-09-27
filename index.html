@@ -1,78 +1,72 @@
-                                                                                                               </html>
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-<meta charset="UTF-8">
+                                            <!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BellApp - Dono 869116478</title>
+<title>BellApp</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
 body{background:#000;color:#fff;height:100vh;display:flex;flex-direction:column}
-.top{height:50px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;border-bottom:1px solid #111}
-.screen{flex:1;overflow:hidden;position:relative}
-.page{display:none;height:100%;overflow-y:auto}
-.page.active{display:block}
-.bottom{height:62px;border-top:1px solid #111;display:flex;justify-content:space-around;align-items:center}
-.b-item{color:#666;font-size:10px;text-align:center;flex:1}
-.b-item.on{color:#fff}
-.b-item i{font-size:22px;display:block;font-style:normal}
-.auth{position:fixed;inset:0;background:#000;z-index:99;padding:20px}
-.input{width:100%;background:#111;border:1px solid #222;color:#fff;padding:14px;border-radius:12px;margin-top:12px;font-size:16px}
-.tabs{display:flex;background:#111;border-radius:12px;padding:4px;margin-top:16px}
-.tabs div{flex:1;text-align:center;padding:10px;border-radius:8px;color:#666}
-.tabs div.on{background:#fff;color:#000}
-.btn{background:#fff;color:#000;border:0;padding:14px;border-radius:22px;font-weight:700;width:100%;margin-top:16px}
-.item{padding:14px;border-bottom:1px solid #111;display:flex;gap:10px}
-.avatar{width:40px;height:40px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.otp{position:fixed;inset:0;background:#000;z-index:200;padding:20px;display:none;flex-direction:column}
-.mTabs{display:flex;gap:8px;padding:12px 16px}
-.mTabs div{padding:7px 14px;border-radius:20px;font-size:13px;background:#111;color:#666;border:1px solid #222}
-.mTabs div.on{background:#fff;color:#000}
-.badge{background:#00aaff;color:#fff;font-size:10px;padding:3px 7px;border-radius:10px;margin-left:6px;font-weight:700}
-</style>
-</head>
-<body>
-<div class="top"><b>BellApp 🔔</b><span onclick="showP('search')">🔍</span></div>
+.top{height:50px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;border-bottom:1px solid #222}
+.screen{flex:1;overflow:auto}
+.page{display:none;height:100%}.page.active{display:block}
+.bottom{height:60px;border-top:1px solid #222;display:flex;justify-content:space-around;align-items:center}
+.b-item{color:#666;font-size:10px;text-align:center;flex:1}.b-item.on{color:#fff}
+.b-item i{font-size:22px;display:block}
+.auth{position:fixed;inset:0;background:#000;z-index:99;padding:24px}
+.input{width:100%;background:#111;border:1px solid #333;color:#fff;padding:14px;border-radius:12px;margin-top:12px;font-size:16px}
+.btn{background:#fff;color:#000;border:0;padding:14px;border-radius:24px;font-weight:700;width:100%;margin-top:16px;font-size:16px}
+.badge{background:#00aaff;color:#fff;font-size:11px;padding:3px 8px;border-radius:12px;margin-left:6px}
+</style></head><body>
+<div class="top"><b>BellApp 🔔</b><b onclick="showP('search')" style="font-size:20px">🔍</b></div>
 <div class="screen">
-<div id="p-home" class="page active"></div>
-<div id="p-explore" class="page"><div style="padding:12px"><input id="sEx" class="input" style="margin:0" placeholder="Pesquisar..." oninput="doSearch(this.value)"><div id="exList" style="margin-top:12px;color:#666"></div></div></div>
-<div id="p-msg" class="page"><div style="padding:16px 16px 0 16px"><h3>Mensagens</h3></div><div class="mTabs"><div id="tA" class="on" onclick="setM('A')">Atividade</div><div id="tC" onclick="setM('C')">Bate-papo</div></div><div id="lA"></div><div id="lC" style="display:none"></div></div>
-<div id="p-profile" class="page"><div style="padding:30px;text-align:center"><div style="width:88px;height:88px;background:linear-gradient(135deg,#00aaff,#aa00ff);border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;font-size:44px">👑</div><h3 id="pN"></h3><p id="pH" style="color:#666;font-size:12px"></p><div id="offBadge" style="display:none;background:linear-gradient(90deg,#00aaff,#aa00ff);padding:10px 16px;border-radius:22px;font-size:13px;font-weight:700;margin:14px auto;max-width:280px">👑 CONTA OFICIAL BellApp • Verificado ✅<br><span style="font-size:10px">Dono: +258 869116478</span></div><button style="background:#111;border:1px solid #222;color:#666;padding:10px;border-radius:20px;margin-top:20px;width:100%" onclick="logout()">Sair</button></div></div>
-<div id="p-search" class="page"><div style="padding:12px;display:flex;gap:8px"><input id="sAll" class="input" style="margin:0;flex:1" placeholder="Pesquisar..." oninput="doSearch(this.value)"><span style="padding:14px" onclick="showP('home')">✕</span></div><div id="sR" style="padding:16px;color:#666"></div></div>
+<div id="p-home" class="page active" style="padding:20px;text-align:center;color:#666">Carregando...</div>
+<div id="p-search" class="page" style="padding:20px"><input id="sAll" class="input" placeholder="Pesquisar..." style="margin:0"><div style="margin-top:20px;color:#555">Pesquisa em Beira</div></div>
+<div id="p-msg" class="page"><div style="padding:16px"><h3>Mensagens</h3><p style="color:#555;font-size:13px;margin-top:8px">Atividade + Bate-papo tipo TikTok</p></div><div id="mList" style="padding:10px"></div></div>
+<div id="p-profile" class="page"><div style="padding:30px;text-align:center">
+<div style="width:90px;height:90px;background:linear-gradient(135deg,#00aaff,#aa00ff);border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;font-size:50px">👑</div>
+<h2 id="pN">Visitante</h2><p id="pH" style="color:#777;margin-top:4px"></p>
+<div id="offBadge" style="display:none;margin-top:16px;background:linear-gradient(90deg,#00aaff,#7a00ff);padding:12px;border-radius:24px;font-weight:700">👑 CONTA OFICIAL BellApp • Verificado ✅<br><span style="font-size:11px">+258 869116478 • Dono</span></div>
+<div style="margin-top:30px;color:#555;font-size:13px">Primeira conta da BellApp de Beira</div>
+<button onclick="localStorage.clear();location.reload()" style="margin-top:20px;background:#111;border:1px solid #333;color:#666;padding:10px 20px;border-radius:20px">Sair e testar de novo</button>
+</div></div>
 </div>
 <div class="bottom">
 <div class="b-item on" id="b-home" onclick="showP('home')"><i>⌂</i>Casinha</div>
-<div class="b-item" id="b-explore" onclick="showP('explore')"><i>◷</i>Explorar</div>
 <div class="b-item" id="b-msg" onclick="showP('msg')"><i>💬</i>Mensagem</div>
 <div class="b-item" id="b-profile" onclick="showP('profile')"><i>👤</i>Eu</div>
 </div>
 <div id="auth" class="auth">
-<h1>BellApp 🔔</h1><p style="color:#777">Conta do Dono Oficial</p>
-<div class="tabs"><div id="tE" onclick="setTab('E')">Email</div><div id="tP" class="on" onclick="setTab('P')">Número</div></div>
-<div id="bE" style="display:none"><input id="email" class="input" placeholder="email"></div>
-<div id="bP"><div style="display:flex;gap:8px"><select id="cc" class="input" style="width:120px"><option value="+258">🇲🇿 +258</option><option value="+55">🇧🇷 +55</option><option value="+351">🇵🇹 +351</option><option value="+27">🇿🇦 +27</option><option value="+1">🇺🇸 +1</option></select><input id="phone" class="input" style="flex:1" value="869116478"></div><p style="color:#00aaff;font-size:11px;margin-top:8px">👑 Número oficial: 869116478 = BellApp oficial ✅</p></div>
-<input id="pass" class="input" type="password" maxlength="6" placeholder="Senha 6 dígitos ex: 123456">
-<p id="err" style="color:#f55;display:none;margin-top:8px;font-size:13px"></p>
-<button class="btn" onclick="doAuth()">Criar conta oficial 👑</button>
+<h1 style="font-size:32px">BellApp 🔔</h1><p style="color:#777;margin-top:6px">Conta do Dono Oficial</p>
+<div style="display:flex;gap:8px;margin-top:20px"><select id="cc" class="input" style="width:110px;margin:0"><option value="+258">🇲🇿 +258</option><option value="+55">🇧🇷 +55</option><option value="+351">🇵🇹 +351</option></select><input id="phone" class="input" value="869116478" style="flex:1;margin:0"></div>
+<p style="color:#00aaff;font-size:12px;margin-top:8px">👑 Teu número oficial: 869116478</p>
+<input id="pass" class="input" type="tel" maxlength="6" placeholder="Senha 6 números ex: 123456">
+<p id="err" style="color:#ff4444;font-size:13px;margin-top:10px;display:none"></p>
+<button class="btn" onclick="doAuth()">Entrar como Dono 👑</button>
+<p style="color:#333;font-size:11px;text-align:center;margin-top:14px">Senha obrigatória: 6 números</p>
 </div>
-<div id="otpS" class="otp"><h2>Verificação Dono 👑</h2><b id="otpT" style="margin-top:8px;display:block;color:#00aaff"></b><div id="otpCode" style="background:#fff;color:#000;padding:14px;border-radius:10px;text-align:center;margin-top:14px;font-weight:700;letter-spacing:5px;font-size:22px">------</div><input id="otpI" class="input" style="text-align:center;letter-spacing:12px;font-size:22px;font-weight:700" maxlength="6" placeholder="000000"><p id="otpE" style="color:#f55;display:none;margin-top:8px"></p><button class="btn" onclick="verOtp()">Confirmar e virar oficial ✅</button></div>
 <script>
 const DONO='869116478';
-let tab='P',tmp=null,otp='',user=JSON.parse(localStorage.getItem('bell_u')||'null'),posts=JSON.parse(localStorage.getItem('bell_p')||'[]'),atvs=JSON.parse(localStorage.getItem('bell_a')||'[]'),chats=JSON.parse(localStorage.getItem('bell_c')||'[]');
-function isOff(u){if(!u)return false;let f=(u.full||'').replace(/[^0-9]/g,'');return f.includes(DONO);}
-function setTab(t){tab=t;document.getElementById('tE').className=t=='E'?'on':'';document.getElementById('tP').className=t=='P'?'on':'';document.getElementById('bE').style.display=t=='E'?'block':'none';document.getElementById('bP').style.display=t=='P'?'block':'none'}
-function showP(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');document.querySelectorAll('.b-item').forEach(b=>b.classList.remove('on'));let el=document.getElementById('b-'+id);if(el)el.classList.add('on');if(id=='home')rH();if(id=='msg')rM();if(id=='profile')rProf()}
-function setM(t){document.getElementById('tA').className=t=='A'?'on':'';document.getElementById('tC').className=t=='C'?'on':'';document.getElementById('lA').style.display=t=='A'?'block':'none';document.getElementById('lC').style.display=t=='C'?'block':'none'}
-function doAuth(){let p=document.getElementById('pass').value,er=document.getElementById('err');if(!/^\d{6}$/.test(p)){er.style.display='block';er.textContent='Senha OBRIGATÓRIA 6 NÚMEROS!';return}let cc=document.getElementById('cc').value,ph=document.getElementById('phone').value.trim();let full=cc+' '+ph;if(ph.replace(/[^0-9]/g,'').includes(DONO)){tmp={name:'BellApp oficial',full:full,owner:true}}else{tmp={name:full,full:full,owner:false}}otp=Math.floor(100000+Math.random()*900000).toString();document.getElementById('otpT').textContent=full+(tmp.owner?' 👑 DONO':'');document.getElementById('otpCode').textContent=otp;document.getElementById('otpS').style.display='flex';}
-function verOtp(){let i=document.getElementById('otpI').value,e=document.getElementById('otpE');if(i!==otp){e.style.display='block';e.textContent='Código errado! Certo: '+otp;return}finish()}
-function finish(){user=tmp;localStorage.setItem('bell_u',JSON.stringify(user));document.getElementById('auth').style.display='none';document.getElementById('otpS').style.display='none';rProf();rH();showP('profile');}
-function rProf(){if(!user)return;let off=isOff(user)||user.owner;document.getElementById('pN').innerHTML=(off?'BellApp oficial':'Visitante')+(off?' <span class=badge>✓</span> 👑':'');document.getElementById('pH').textContent=user.full;document.getElementById('offBadge').style.display=off?'block':'none';}
-function rH(){let c=document.getElementById('p-home');if(posts.length==0){c.innerHTML='<div style=height:70%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#555;padding:30px;text-align:center'><div style=font-size:60px>👑</div><h3 style=color:#fff>App limpa</h3><button style=background:#fff;color:#000;border:0;padding:12px 20px;border-radius:20px;margin-top:12px;font-weight:700 onclick=cP()>+ Postar</button></div>';return}c.innerHTML=posts.map(p=>'<div style=padding:14px;border-bottom:1px solid #111><b>'+p.user+'</b><div>'+p.text+'</div></div>').join('')}
-function cP(){let t=prompt('Post:');if(!t)return;posts.unshift({user:user.name,text:t});localStorage.setItem('bell_p',JSON.stringify(posts));rH();}
-function rM(){document.getElementById('lA').innerHTML=atvs.length?atvs.map(a=>'<div class=item><div class=avatar>🔔</div><div><b>Atividade</b><div style=color:#aaa;font-size:13px>'+a.text+'</div></div></div>').join(''):'<div style=text-align:center;padding:40px;color:#555>🔔 Nenhuma atividade</div>';document.getElementById('lC').innerHTML=chats.length?chats.map(c=>'<div class=item><div class=avatar>👤</div><div style=flex:1><b>'+c.name+'</b><span style=color:#555;font-size:11px> '+c.time+'</span><div style=color:#888;font-size:13px>'+c.msg+'</div></div></div>').join(''):'<div style=text-align:center;padding:40px;color:#555>💬 Vazio - ex beljo a 1h</div>';}
-function doSearch(q){let r=document.getElementById('sR'),e=document.getElementById('exList');let h='<div style=color:#555>Digita...</div>';if(r)r.innerHTML=h;if(e)e.innerHTML=h;}
-function logout(){localStorage.removeItem('bell_u');location.reload()}
-if(user){document.getElementById('auth').style.display='none';rProf()}rH();rM();
+let user=JSON.parse(localStorage.getItem('bell_u')||'null');
+function showP(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');document.querySelectorAll('.b-item').forEach(b=>b.classList.remove('on'));let el=document.getElementById('b-'+id);if(el)el.classList.add('on');}
+function doAuth(){
+let ph=document.getElementById('phone').value.replace(/\D/g,'');
+let pw=document.getElementById('pass').value.trim();
+let er=document.getElementById('err');
+if(ph.length<8){er.style.display='block';er.textContent='Número inválido';return;}
+if(!/^\d{6}$/.test(pw)){er.style.display='block';er.textContent='Senha precisa ter 6 NÚMEROS! Ex: 123456 (você digitou '+pw.length+' dígitos)';return;}
+let isOwner=ph.includes(DONO);
+let u={name:isOwner?'BellApp oficial':'+258 '+ph, full:'+258 '+ph, owner:isOwner, pass:pw};
+localStorage.setItem('bell_u',JSON.stringify(u));
+user=u;
+finish();
+}
+function finish(){
+document.getElementById('auth').style.display='none';
+document.getElementById('pN').innerHTML=user.name+(user.owner?' <span class=badge>✓</span> 👑':'');
+document.getElementById('pH').textContent=user.full;
+document.getElementById('offBadge').style.display=user.owner?'block':'none';
+document.getElementById('p-home').innerHTML='<div style=text-align:center;padding:40px 20px><div style=font-size:60px>👑</div><h2 style=color:#fff>Bem-vindo Dono!</h2><p style=color:#777;margin-top:10px>Você é a primeira conta oficial<br><b style=color:#fff>'+user.name+' ✓</b><br>'+user.full+'</p><div style=margin-top:20px;background:#111;padding:14px;border-radius:14px;text-align:left><b>✅ BellApp funcionando!</b><br><span style=color:#777;font-size:13px>• Casinha<br>• Mensagem (Atividade + Bate-papo)<br>• Eu com coroa e verificado<br>• Conta oficial: '+user.full+'</span></div></div>';
+document.getElementById('mList').innerHTML='<div style=background:#111;padding:14px;border-radius:12px;display:flex;gap:10px;align-items:center><div style=width:40px;height:40px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center>🔔</div><div><b>Atividade</b><div style=color:#777;font-size:13px>beljo começou a seguir você • a 1h</div></div></div><div style=margin-top:10px;background:#111;padding:14px;border-radius:12px;display:flex;gap:10px><div style=width:40px;height:40px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center>👤</div><div><b>beljo</b> <span style=color:#555;font-size:11px>a 1h</span><div style=color:#777;font-size:13px>E aí dono, app tá top! 🔥</div></div></div>';
+showP('profile');
+}
+if(user){finish();}
 </script>
-</body>
-</html>
+</body></html>                                                                   

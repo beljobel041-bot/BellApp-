@@ -499,4 +499,126 @@ function saveEdit(){
  if(nn!==user.name)user.nomeChangedAt=agora;
  user.name=nn;user.bio=nb;if(editFotoBase)user.foto=editFotoBase;
  users=users.map(u=>u.id==user.id?user:u);localStorage.setItem('bell_users',JSON.stringify(users));localStorage.setItem('bell_u',JSON.stringify(user));
- videos=videos.map(v=>{if(v.ownerId==user.id){v.userName=user.name;v.userFoto=user.foto}return v});localStorage.setItem('bell
+ videos=videos.map(v=>{if(v.ownerId==user.id){v.userName=user.name;v.userFoto=user.foto}return v});localStorage.setItem('bell<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BellApp 9.1</title>
+<style>
+body{margin:0;background:#000;color:#fff;font-family:system-ui;padding:16px}
+*{box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent}
+.input{width:100%;background:#151515;border:1px solid #333;color:#fff;padding:16px;border-radius:12px;margin-top:10px;font-size:16px}
+.btn{background:#fff;color:#000;border:0;padding:16px;border-radius:30px;font-weight:900;width:100%;margin-top:12px}
+.btn2{background:#222;color:#fff;border:1px solid #444;padding:14px;border-radius:30px;width:100%;margin-top:10px}
+.wizard{border:1px solid #222;border-radius:20px;padding:16px;margin-top:12px;display:none}
+.wizard.on{display:block;background:#0a0a0a}
+.tab2{display:flex;gap:8px;margin-top:10px}
+.tab2 div{flex:1;padding:12px;text-align:center;border-radius:20px;border:1px solid #333}
+.tab2 div.on{background:#fff;color:#000;font-weight:800}
+</style></head><body>
+
+<h2>BellApp 🔔 9.1 - Email Funciona</h2>
+
+<div id="w1" class="wizard on">
+<b>1º SELO ORIGINAL - TOQUE PARA COMEÇAR</b><p style="color:#aaa;font-size:13px;margin-top:8px">👑 Selo só uma vez - dono 869116478<br>Toque no botão abaixo para avançar</p>
+<button class="btn" onclick="go(2)">COMEÇAR →</button>
+</div>
+
+<div id="w2" class="wizard">
+<b>2º NOME - só muda a cada 3 meses</b>
+<input id="nome" class="input" placeholder="Teu nome - ex: Beljo">
+<button class="btn" onclick="if(nomeVal()) go(3)">PRÓXIMO →</button>
+</div>
+
+<div id="w3" class="wizard">
+<b>3º ESCOLHE - NÚMERO OU EMAIL</b>
+<div class="tab2">
+<div id="tPhone" class="on" onclick="setM('phone')">📱 NÚMERO</div>
+<div id="tEmail" onclick="setM('email')">📧 EMAIL</div>
+</div>
+
+<div id="boxPhone">
+<select id="cc" class="input"><option value="+258">🇲🇿 +258 MZ</option><option value="+55">🇧🇷 +55 BR</option><option value="+351">🇵🇹 +351 PT</option><option value="+1">🇺🇸 +1 USA</option><option value="+244">🇦🇴 +244 AO</option><option value="+27">🇿🇦 +27 ZA</option><option value="+44">🇬🇧 +44 UK</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+34">🇪🇸 +34</option><option value="+91">🇮🇳 +91</option><option value="+86">🇨🇳 +86</option><option value="+81">🇯🇵 +81</option><option value="+234">🇳🇬 +234</option><option value="+254">🇰🇪 +254</option></select>
+<input id="phone" class="input" placeholder="Teu número" inputmode="numeric">
+</div>
+
+<div id="boxEmail" style="display:none">
+<input id="email" class="input" placeholder="Teu email - beljo@gmail.com">
+</div>
+
+<button class="btn" onclick="checkContato()">PRÓXIMO →</button>
+</div>
+
+<div id="w4" class="wizard">
+<b>4º SENHA + FOTO + PARTILHAR</b>
+<input id="pass" class="input" type="password" placeholder="Senha letras+números min 6">
+<div style="margin-top:10px;display:flex;gap:10px;align-items:center"><img id="prev" style="width:60px;height:60px;border-radius:50%;background:#111;object-fit:cover;display:none"><label class="btn2" style="width:auto;margin:0">📷 Foto<input id="foto" type="file" accept="image/*" hidden></label></div>
+<button class="btn" onclick="checkFinal()">PRÓXIMO →</button>
+</div>
+
+<div id="w5" class="wizard">
+<b>5º CRIAR CONTA</b>
+<p id="resumo" style="color:#aaa;font-size:13px;margin-top:8px"></p>
+<button class="btn" onclick="criar()">✓ CRIAR CONTA</button>
+</div>
+
+<p id="err" style="color:#ff4d4d;display:none;margin-top:10px"></p>
+
+<div id="app" style="display:none;margin-top:20px;border-top:1px solid #222;padding-top:16px">
+<h3>✅ Conta criada!</h3>
+<div id="feed"></div>
+</div>
+
+<script>
+let modo='phone',fotoBase=null;
+function go(n){
+ document.querySelectorAll('.wizard').forEach(w=>w.style.display='none');
+ document.getElementById('w'+n).style.display='block';
+ if(n==5){
+  let nome=document.getElementById('nome').value;
+  let contato=modo=='phone'?document.getElementById('cc').value+' '+document.getElementById('phone').value:document.getElementById('email').value;
+  document.getElementById('resumo').innerHTML='Nome: '+nome+'<br>Contato: '+contato+'<br>Modo: '+modo+'<br>Selo: '+(contato.includes('869116478')?'Original 👑':'10k precisa')+'<br>Partilhar: Ativado';
+ }
+}
+function nomeVal(){let v=document.getElementById('nome').value.trim(); if(v.length<2){alert('Escreve nome');return false;} return true;}
+function setM(m){
+ modo=m;
+ document.getElementById('tPhone').className=m=='phone'?'on':'';
+ document.getElementById('tEmail').className=m=='email'?'on':'';
+ document.getElementById('boxPhone').style.display=m=='phone'?'block':'none';
+ document.getElementById('boxEmail').style.display=m=='email'?'block':'none';
+}
+function checkContato(){
+ let ph=document.getElementById('phone').value.replace(/\D/g,'');
+ let em=document.getElementById('email').value.trim();
+ if(modo=='phone'){ if(ph.length<8){alert('Número inválido');return;} }
+ else{ if(!em.includes('@')||!em.includes('.')){alert('Email inválido - ex: beljo@gmail.com');return;} }
+ go(4);
+}
+function checkFinal(){
+ let pw=document.getElementById('pass').value;
+ if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){alert('Senha precisa letras+números min 6');return;}
+ if(!fotoBase){alert('Escolhe foto');return;}
+ go(5);
+}
+document.getElementById('foto').addEventListener('change',e=>{
+ let f=e.target.files[0]; if(!f)return;
+ let r=new FileReader(); r.onload=ev=>{fotoBase=ev.target.result; let im=document.getElementById('prev'); im.src=fotoBase; im.style.display='block';}; r.readAsDataURL(f);
+});
+function criar(){
+ let nome=document.getElementById('nome').value.trim();
+ let ph=document.getElementById('phone').value.replace(/\D/g,'');
+ let em=document.getElementById('email').value.trim().toLowerCase();
+ let pw=document.getElementById('pass').value;
+ let cc=document.getElementById('cc').value;
+ let full=modo=='phone'?cc+' '+ph:em;
+ let idc=modo=='phone'?ph:em;
+ let users=JSON.parse(localStorage.getItem('bell_final')||'[]');
+ if(ph.includes('869116478')&&users.some(u=>u.full.replace(/\D/g,'').includes('869116478'))){alert('869116478 já é do dono');return;}
+ let novo={id:Date.now(),name:nome,full:full,idContato:idc,pass:pw,foto:fotoBase,owner:ph.includes('869116478')||em.includes('dono'),followers:ph.includes('869116478')?15000:0};
+ users.push(novo); localStorage.setItem('bell_final',JSON.stringify(users));
+ document.getElementById('app').style.display='block';
+ document.getElementById('feed').innerHTML=`
+ <div style="text-align:center"><img src="${fotoBase}" style="width:90px;height:90px;border-radius:50%"><h2>${nome} ${novo.owner?'👑 <span style="background:#20D5EC;padding:2px 6px;border-radius:50%;font-size:12px">✓</span>':''}</h2><p style="color:#666">${full} - ${modo}</p></div>
+ <div style="margin-top:16px;background:#111;padding:12px;border-radius:12px"><p>🎬 Vídeo exemplo com partilhar</p><div style="display:flex;gap:8px;margin-top:8px"><button class="btn2" style="flex:1" onclick="navigator.clipboard.writeText('https://bellapp.com/${idc}').then(()=>alert('Link copiado'))">📋 Copiar link</button><button class="btn2" style="flex:1" onclick="window.open('https://wa.me/?text='+encodeURIComponent('https://bellapp.com/${idc}'))">💬 WhatsApp</button></div></div>
+ `;
+ document.querySelectorAll('.wizard').forEach(w=>w.style.display='none');
+}
+</script>
+</body></html>

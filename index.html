@@ -621,4 +621,131 @@ function criar(){
  document.querySelectorAll('.wizard').forEach(w=>w.style.display='none');
 }
 </script>
+</body></html><!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BellApp Simples</title>
+<style>body{background:#000;color:#fff;font-family:system-ui;padding:16px;margin:0}input,select,button{width:100%;padding:14px;border-radius:12px;margin-top:10px;font-size:16px;border:1px solid #333;background:#111;color:#fff}button{background:#fff;color:#000;font-weight:900;border:0}.box{border:1px solid #222;border-radius:16px;padding:14px;margin-top:14px}.small{color:#666;font-size:12px}</style></head><body>
+<h2>BellApp 🔔 - Simples que funciona</h2>
+
+<div class="box">
+<span class="small">CONTA NOVA - ESCREVE TUDO AQUI</span>
+<input id="nome" placeholder="Nome da conta - ex: Beljo">
+
+<select id="cc">
+<option value="+258">🇲🇿 +258 Moçambique</option>
+<option value="+55">🇧🇷 +55 Brasil</option>
+<option value="+351">🇵🇹 +351 Portugal</option>
+<option value="+1">🇺🇸 +1 EUA</option>
+<option value="+244">🇦🇴 +244 Angola</option>
+<option value="+27">🇿🇦 +27 Africa Sul</option>
+<option value="+44">🇬🇧 +44 UK</option>
+<option value="+33">🇫🇷 +33 FR</option>
+<option value="+49">🇩🇪 +49 DE</option>
+<option value="+34">🇪🇸 +34 ES</option>
+<option value="+91">🇮🇳 +91 India</option>
+<option value="+86">🇨🇳 +86 China</option>
+<option value="+81">🇯🇵 +81 Japão</option>
+<option value="+234">🇳🇬 +234 Nigeria</option>
+<option value="+254">🇰🇪 +254 Quênia</option>
+<option value="+260">🇿🇲 +260 Zâmbia</option>
+<option value="+263">🇿🇼 +263 Zimbábue</option>
+</select>
+
+<input id="phone" placeholder="Número - ex: 869116478">
+<input id="email" placeholder="OU Email - ex: beljo@gmail.com">
+<input id="pass" type="password" placeholder="Senha - letras + números min 6">
+<input id="foto" type="file" accept="image/*">
+<img id="prev" style="width:70px;height:70px;border-radius:50%;display:none;margin-top:10px;object-fit:cover">
+<p id="err" style="color:#ff4444;display:none"></p>
+<button onclick="criarConta()">CRIAR CONTA</button>
+</div>
+
+<div class="box">
+<span class="small">RECUPERAR CONTA - O QUE É?</span>
+<p style="font-size:13px;color:#aaa">É para quem já tem conta e esqueceu. Escreve número ou email + senha que usou</p>
+<input id="recContato" placeholder="Número ou Email da conta antiga">
+<input id="recSenha" type="password" placeholder="Senha que usou antes">
+<p id="recErr" style="color:#ff4444;display:none"></p>
+<button onclick="recuperar()" style="background:#222;color:#fff;border:1px solid #333">ENTRAR NA CONTA ANTIGA</button>
+
+<p style="text-align:center;margin-top:12px;color:#ff4444;font-weight:800" onclick="mostrarPerdeu()">Perdeu senha?? Clique aqui →</p>
+
+<div id="perdeuBox" style="display:none;border-top:1px solid #222;margin-top:12px;padding-top:12px">
+<p style="font-size:13px">Escolhe como receber código de 6 dígitos:</p>
+<button onclick="enviar('SMS')" style="background:#222;color:#fff;border:1px solid #333">📩 SMS</button>
+<button onclick="enviar('WhatsApp')" style="background:#222;color:#fff;border:1px solid #333">💬 WhatsApp</button>
+<button onclick="enviar('Chamada')" style="background:#222;color:#fff;border:1px solid #333">📞 Chamada</button>
+<button onclick="enviar('Email')" style="background:#222;color:#fff;border:1px solid #333">📧 Email</button>
+<div id="codeBox" style="display:none;margin-top:10px">
+<div id="codeShow" style="background:#fff;color:#000;padding:12px;text-align:center;font-weight:900;letter-spacing:6px;border-radius:10px">------</div>
+<input id="codeInput" placeholder="Escreve código aqui" maxlength="6">
+<button onclick="confirmar()">Confirmar código</button>
+<div id="newPassBox" style="display:none">
+<input id="newPass" type="password" placeholder="Nova senha">
+<button onclick="salvarNova()">Salvar nova senha</button>
+</div>
+</div>
+</div>
+</div>
+
+<div id="app" style="display:none;margin-top:20px;border-top:1px solid #333;padding-top:16px">
+<h3>✅ Entrou!</h3>
+<div id="feed"></div>
+<button onclick="location.reload()" style="background:#222;color:#fff;border:1px solid #333;margin-top:16px">Sair / Criar outra</button>
+</div>
+
+<script>
+let fotoBase=null,codigo='',recUser=null;
+document.getElementById('foto').onchange=e=>{
+ let f=e.target.files[0]; if(!f)return;
+ let r=new FileReader(); r.onload=ev=>{fotoBase=ev.target.result; let im=document.getElementById('prev'); im.src=fotoBase; im.style.display='block';}; r.readAsDataURL(f);
+};
+
+function criarConta(){
+ let nome=document.getElementById('nome').value.trim();
+ let ph=document.getElementById('phone').value.replace(/\D/g,'');
+ let em=document.getElementById('email').value.trim().toLowerCase();
+ let pw=document.getElementById('pass').value;
+ let cc=document.getElementById('cc').value;
+ let err=document.getElementById('err');
+ err.style.display='none';
+ if(!nome){err.textContent='Escreve nome'; err.style.display='block'; return;}
+ if(!fotoBase){err.textContent='Escolhe foto'; err.style.display='block'; return;}
+ if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){err.textContent='Senha letras+números min 6'; err.style.display='block'; return;}
+ let full='',idc='';
+ if(em&&em.includes('@')){ full=em; idc=em; }
+ else if(ph.length>=8){ full=cc+' '+ph; idc=ph; }
+ else{ err.textContent='Escreve número OU email'; err.style.display='block'; return; }
+
+ let users=JSON.parse(localStorage.getItem('bell_final_simple')||'[]');
+ if(idc.includes('869116478')&&users.some(u=>u.idc.includes('869116478'))){err.textContent='869116478 já é do dono'; err.style.display='block'; return;}
+ let isDono=idc.includes('869116478');
+ let novo={id:Date.now(),name:nome,full:full,idc:idc,pass:pw,foto:fotoBase,owner:isDono,followers:isDono?15000:0,nomeChanged:Date.now()};
+ users.push(novo); localStorage.setItem('bell_final_simple',JSON.stringify(users));
+ mostrarApp(novo);
+}
+
+function mostrarApp(u){
+ document.getElementById('app').style.display='block';
+ document.getElementById('feed').innerHTML=`
+ <div style="text-align:center"><img src="${u.foto}" style="width:90px;height:90px;border-radius:50%"><h2>${u.name} ${u.owner?'👑 <span style="background:#20D5EC;padding:2px 6px;border-radius:50%">✓</span>':''}</h2><p style="color:#666">${u.full}</p><p style="font-size:11px;color:#555">Nome só muda a cada 3 meses - travado</p></div>
+ <div style="margin-top:16px;background:#111;padding:12px;border-radius:12px"><b>🎬 Post com partilhar</b><div style="display:flex;gap:8px;margin-top:8px"><button onclick="navigator.clipboard.writeText('https://bellapp.com/${u.idc}').then(()=>alert('Link copiado!'))" style="background:#222;color:#fff;border:1px solid #333">📋 Copiar</button><button onclick="window.open('https://wa.me/?text='+encodeURIComponent('https://bellapp.com/${u.idc}'))" style="background:#222;color:#fff;border:1px solid #333">💬 WhatsApp</button></div></div>
+ `;
+ window.scrollTo(0,document.body.scrollHeight);
+}
+
+function recuperar(){
+ let ct=document.getElementById('recContato').value.trim().toLowerCase();
+ let pw=document.getElementById('recSenha').value;
+ let users=JSON.parse(localStorage.getItem('bell_final_simple')||'[]');
+ let ach=users.find(u=>u.full.toLowerCase()==ct||u.idc.toLowerCase()==ct);
+ let err=document.getElementById('recErr');
+ err.style.display='none';
+ if(!ach){err.textContent='Conta não encontrada'; err.style.display='block'; return;}
+ if(ach.pass!=pw){err.textContent='Senha errada - clica Perdeu senha??'; err.style.display='block'; recUser=ach; return;}
+ mostrarApp(ach);
+}
+function mostrarPerdeu(){document.getElementById('perdeuBox').style.display='block'; let ct=document.getElementById('recContato').value.trim(); let users=JSON.parse(localStorage.getItem('bell_final_simple')||'[]'); recUser=users.find(u=>u.full.toLowerCase()==ct.toLowerCase()||u.idc.toLowerCase()==ct.toLowerCase())||null; if(!recUser){alert('Primeiro escreve número ou email da conta que queres recuperar em cima');}}
+function enviar(t){codigo=Math.floor(100000+Math.random()*900000).toString(); document.getElementById('codeBox').style.display='block'; document.getElementById('codeShow').textContent=codigo; alert('Código '+codigo+' enviado por '+t+' (simulação)');}
+function confirmar(){let inp=document.getElementById('codeInput').value; if(inp==codigo){document.getElementById('newPassBox').style.display='block';}else{alert('Código errado - certo é '+codigo);}}
+function salvarNova(){let np=document.getElementById('newPass').value; if(np.length<6||!/\d/.test(np)||!/[a-zA-Z]/.test(np)){alert('Senha min 6 letras+números');return;} if(!recUser){alert('Recupera primeiro');return;} let users=JSON.parse(localStorage.getItem('bell_final_simple')||'[]'); users=users.map(u=>{if(u.id==recUser.id)u.pass=np;return u;}); localStorage.setItem('bell_final_simple',JSON.stringify(users)); alert('Nova senha salva! Agora entra com ela'); document.getElementById('perdeuBox').style.display='none';}
+</script>
 </body></html>

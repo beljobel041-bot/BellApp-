@@ -238,3 +238,142 @@ function viewOwn(){viewingId=user?user.id:null;showP('profile');}
 function openSearch(){document.getElementById('lupaModal').style.display='flex';}function closeLupa(){document.getElementById('lupaModal').style.display='none';}
 function openPublish(){if(!user)return;document.getElementById('pubModal').style.display='flex';}function closePub(){document.getElementById('pubModal').style.display='none';}
 function openEdit(){document.getElementById('editModal').style.display='flex';document.getElementById('editNome').value=user.name;document.getElementById('editBio').value=user.bio||'';document.getElementById('editAvPrev').src=user.foto;
+<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>BellApp 8.1 Fix</title>
+<style>
+*{-webkit-tap-highlight-color:transparent!important;-webkit-touch-callout:none;box-sizing:border-box;margin:0;padding:0}
+html,body{touch-action:manipulation;overscroll-behavior:none}
+body{background:#000;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden;font-family:-apple-system,sans-serif;-webkit-user-select:none;user-select:none}
+button,a,div{-webkit-tap-highlight-color:transparent;outline:none}
+.top{height:52px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;border-bottom:1px solid #1a1a1a;z-index:10}
+.screen{flex:1;overflow:hidden;position:relative}.page{display:none;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}.page.active{display:flex;flex-direction:column}
+.bottom{height:68px;background:#000;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;align-items:center;padding-bottom:6px;z-index:10}
+.b-item{color:#666;text-align:center;flex:1;padding:8px}.b-item.on{color:#fff}.b-item i{font-size:26px;font-style:normal}
+.b-item.plus i{background:#fff;color:#000;width:44px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900}
+.auth{position:fixed;inset:0;background:#000;z-index:999;padding:18px;overflow-y:auto}
+.input{width:100%;background:#121212;border:1px solid #2a2a2a;color:#fff;padding:14px;border-radius:12px;margin-top:12px;font-size:16px;outline:none}
+.btn{background:#fff;color:#000;border:0;padding:14px;border-radius:28px;font-weight:800;width:100%;margin-top:14px}
+.btn2{background:#121212;border:1px solid #333;color:#fff;padding:12px;border-radius:28px;width:100%;margin-top:10px}
+.tab{display:flex;gap:8px;margin-top:12px}.tab div{flex:1;padding:10px;text-align:center;border-radius:20px;background:#111;border:1px solid #222;font-size:12px}.tab div.on{background:#fff;color:#000;font-weight:800}
+.follow{background:#fff;color:#000;border:0;padding:8px 20px;border-radius:8px;font-weight:800}.follow.following{background:#2a2a2a;color:#fff;border:1px solid #333}
+.v-badge{width:18px;height:18px;background:#20D5EC;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900;margin-left:4px}
+.story-ring{padding:3px;background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);border-radius:50%;display:inline-block}
+.video-card{width:100%;height:80vh;background:#0a0a0a;position:relative;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #111;flex-shrink:0}
+.video-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#111}
+.video-thumb{background:#111;aspect-ratio:9/14;display:flex;align-items:center;justify-content:center;color:#666}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:300;display:none;align-items:flex-end}.modal.show{display:flex}.modal-box{background:#121212;width:100%;border-radius:24px 24px 0 0;padding:20px;max-height:92vh;overflow-y:auto}
+.opt{padding:14px;background:#1a1a1a;border-radius:12px;margin-top:10px;display:flex;justify-content:space-between;border:1px solid #333}
+.step{display:none}.step.on{display:block}
+.story-bar{display:flex;gap:12px;padding:12px;overflow-x:auto;border-bottom:1px solid #111}.story-item{display:flex;flex-direction:column;align-items:center;min-width:64px}
+.action-col{position:absolute;right:10px;bottom:90px;display:flex;flex-direction:column;gap:18px;align-items:center}
+</style></head><body>
+<div class="top"><b onclick="go('home')">BellApp 🔔</b><div><span style="padding:10px" onclick="openLupa()">🔍</span><span style="padding:10px" onclick="go('msg')">💬</span></div></div>
+<div class="screen">
+<div id="p-home" class="page active"></div>
+<div id="p-relogio" class="page"><div style="padding:16px"><h3>Relógio</h3></div><div id="relogioList"></div></div>
+<div id="p-msg" class="page"><div style="padding:16px"><h3>Mensagens</h3></div><div id="mList"></div></div>
+<div id="p-profile" class="page"><div id="profView"></div></div>
+</div>
+<div class="bottom">
+<div class="b-item on" id="b-home" onclick="go('home')"><i>⌂</i><br><small>Casinha</small></div>
+<div class="b-item" id="b-relogio" onclick="go('relogio')"><i>◷</i><br><small>Relógio</small></div>
+<div class="b-item" onclick="openPub()"><div class="plus"><i>+</i></div></div>
+<div class="b-item" id="b-profile" onclick="viewOwn()"><i>👤</i><br><small>Eu</small></div>
+</div>
+
+<div id="auth" class="auth">
+<h2 style="margin-top:10px">BellApp 🔔</h2>
+<p style="color:#666;font-size:13px;margin-top:4px">1º Selo original 👑 só dono 869116478</p>
+<p style="color:#666;font-size:12px">2º Nome só muda a cada 3 meses</p>
+<div class="tab"><div id="tabPhone" class="on" onclick="setTab('phone')">📱 Número - todos países</div><div id="tabEmail" onclick="setTab('email')">📧 Email</div></div>
+<input id="nomeConta" class="input" placeholder="3º Escreve nome da conta aqui" autocomplete="off">
+<div id="boxPhone"><div style="display:flex;gap:8px;margin-top:12px">
+<select id="cc" class="input" style="width:155px;margin:0;font-size:12px">
+<option value="+258">🇲🇿 +258 Mozambique</option><option value="+1">🇺🇸 +1 USA/Canada</option><option value="+55">🇧🇷 +55 Brazil</option><option value="+351">🇵🇹 +351 Portugal</option><option value="+244">🇦🇴 +244 Angola</option><option value="+27">🇿🇦 +27 South Africa</option><option value="+44">🇬🇧 +44 UK</option><option value="+33">🇫🇷 +33 France</option><option value="+49">🇩🇪 +49 Germany</option><option value="+34">🇪🇸 +34 Spain</option><option value="+39">🇮🇹 +39 Italy</option><option value="+91">🇮🇳 +91 India</option><option value="+86">🇨🇳 +86 China</option><option value="+81">🇯🇵 +81 Japan</option><option value="+7">🇷🇺 +7 Russia</option><option value="+234">🇳🇬 +234 Nigeria</option><option value="+254">🇰🇪 +254 Kenya</option><option value="+255">🇹🇿 +255 Tanzania</option><option value="+256">🇺🇬 +256 Uganda</option><option value="+260">🇿🇲 +260 Zambia</option><option value="+263">🇿🇼 +263 Zimbabwe</option><option value="+93">🇦🇫 +93</option><option value="+355">🇦🇱 +355</option><option value="+213">🇩🇿 +213</option><option value="+376">🇦🇩 +376</option><option value="+54">🇦🇷 +54</option><option value="+374">🇦🇲 +374</option><option value="+61">🇦🇺 +61</option><option value="+43">🇦🇹 +43</option><option value="+994">🇦🇿 +994</option><option value="+973">🇧🇭 +973</option><option value="+880">🇧🇩 +880</option><option value="+375">🇧🇾 +375</option><option value="+32">🇧🇪 +32</option><option value="+591">🇧🇴 +591</option><option value="+57">🇨🇴 +57</option><option value="+20">🇪🇬 +20</option><option value="+62">🇮🇩 +62</option><option value="+98">🇮🇷 +98</option><option value="+52">🇲🇽 +52</option><option value="+212">🇲🇦 +212</option><option value="+966">🇸🇦 +966</option><option value="+90">🇹🇷 +90</option><option value="+971">🇦🇪 +971</option>
+</select>
+<input id="phone" class="input" style="flex:1;margin:0" placeholder="4º Número" inputmode="numeric">
+</div></div>
+<div id="boxEmail" style="display:none"><input id="email" class="input" type="email" placeholder="4º Seu email" autocomplete="off"></div>
+<input id="pass" class="input" type="password" placeholder="5º Senha letras+números">
+<div style="margin-top:12px;display:flex;gap:10px;align-items:center"><img id="prevAv" style="width:56px;height:56px;border-radius:50%;background:#111;object-fit:cover;display:none"><label style="background:#121212;border:1px dashed #333;padding:10px 14px;border-radius:20px;font-size:13px;color:#aaa">📷 Foto obrigatória<input id="foto" type="file" accept="image/*" hidden></label></div>
+<p id="err" style="color:#ff4d4d;display:none;margin-top:10px;font-size:13px"></p>
+<button type="button" class="btn" id="btnCriar">6º Criar conta - clica aqui</button>
+<span style="color:#3b82f6;text-align:center;margin-top:16px;display:block" id="btnRec">Recuperar conta</span>
+</div>
+
+<div id="pubModal" class="modal"><div class="modal-box"><h3>Publicar</h3><input id="vidDesc" class="input" placeholder="Legenda"><button type="button" class="btn" onclick="pubVideo()">📹 Vídeo</button><button type="button" class="btn2" onclick="pubStory()">🟢 Story</button><button type="button" class="btn2" onclick="doLive()">🔴 LIVE 100 seguidores</button><button type="button" class="btn2" onclick="closePub()">Fechar</button></div></div>
+<div id="editModal" class="modal"><div class="modal-box"><h3>Editar perfil</h3><div style="text-align:center;margin-top:14px"><div class="story-ring"><img id="editAvPrev" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #000;display:block"></div><label style="color:#3b82f6;margin-top:8px;display:block">Trocar foto<input id="editFoto" type="file" accept="image/*" hidden></label></div><input id="editNome" class="input" placeholder="Nome - só a cada 3 meses"><input id="editBio" class="input" placeholder="Bio"><div style="display:flex;gap:8px;margin-top:12px"><input id="editStoryText" class="input" style="flex:1;margin:0" placeholder="Story"><label class="btn2" style="width:auto;margin:0">📷<input id="editStoryFoto" type="file" accept="image/*" hidden></label></div><img id="editStoryPrev" style="width:100%;height:100px;object-fit:cover;border-radius:12px;margin-top:10px;display:none"><button type="button" class="btn" onclick="saveEdit()">Salvar</button><button type="button" class="btn2" onclick="closeEdit()">Cancelar</button></div></div>
+<div id="storyModal" class="modal" style="justify-content:center;align-items:center"><div style="width:100%;max-width:400px;height:85vh;background:#111;border-radius:16px;position:relative;overflow:hidden"><img id="storyImg" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;top:0;left:0;right:0;padding:14px;display:flex;gap:10px;align-items:center;background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent)"><img id="storyUserFoto" style="width:36px;height:36px;border-radius:50%"><b id="storyUserNome"></b><span style="margin-left:auto;padding:10px" onclick="closeStory()">✕</span></div><div style="position:absolute;bottom:0;left:0;right:0;padding:14px"><p id="storyText"></p></div></div></div>
+<div id="shareModal" class="modal"><div class="modal-box"><h3>Partilhar</h3><p id="shareText" style="color:#777;margin-top:8px"></p><div style="display:flex;gap:10px;margin-top:16px"><button type="button" class="btn" style="flex:1" onclick="copyLink()">📋 Copiar link</button><button type="button" class="btn2" style="flex:1" onclick="shareWhats()">💬 WhatsApp</button></div><button type="button" class="btn2" onclick="closeShare()">Fechar</button></div></div>
+<div id="recModal" class="modal"><div class="modal-box"><div id="step1" class="step on"><h3>Recuperar conta</h3><input id="recContato" class="input" placeholder="Número ou Email"><input id="recSenha" class="input" type="password" placeholder="Senha"><p id="recErr" style="color:#ff4d4d;display:none"></p><button type="button" class="btn" onclick="tryRec()">Entrar</button><span style="color:#ff4444;text-align:center;margin-top:16px;display:block;font-weight:800" onclick="goStep2()">Perdeu senha?? ›</span><button type="button" class="btn2" onclick="closeRec()">Voltar</button></div><div id="step2" class="step"><h3>Perdeu senha??</h3><div class="opt" onclick="sendCode('SMS')"><span>📩 SMS</span><span>›</span></div><div class="opt" onclick="sendCode('WhatsApp')"><span>💬 WhatsApp</span><span>›</span></div><div class="opt" onclick="sendCode('Chamada')"><span>📞 Chamada</span><span>›</span></div><div class="opt" onclick="sendCode('Email')"><span>📧 Email</span><span>›</span></div><div id="codeBox" style="display:none;margin-top:14px"><div id="codeShow" style="background:#fff;color:#000;padding:12px;border-radius:10px;text-align:center;letter-spacing:6px;font-weight:900;font-size:22px">------</div><input id="codeInput" class="input" placeholder="Código 6 dígitos" maxlength="6" style="text-align:center"><button type="button" class="btn" onclick="confirmCode()">Confirmar</button><div id="newPassBox" style="display:none;margin-top:12px"><input id="newPass" class="input" type="password" placeholder="Nova senha"><button type="button" class="btn" onclick="saveNewPass()">Salvar</button></div></div><button type="button" class="btn2" onclick="goStep1()">← Voltar</button></div></div></div>
+<div id="lupaModal" class="modal"><div class="modal-box"><h3>🔍 Pesquisa</h3><input id="lupaIn" class="input" placeholder="Pesquisar..." autocomplete="off"><div id="lupaRes" style="margin-top:12px"></div><button type="button" class="btn2" onclick="closeLupa()">Fechar</button></div></div>
+
+<script>
+const DONO='869116478';
+let modo='phone',fotoBase=null,codigoRec='',viewingId=null,recUser=null,editFotoBase=null,storyFotoBase=null,shareId=null;
+let users=JSON.parse(localStorage.getItem('bell_users')||'[]');
+let user=JSON.parse(localStorage.getItem('bell_u')||'null');
+let videos=JSON.parse(localStorage.getItem('bell_vids')||'[]');
+let stories=JSON.parse(localStorage.getItem('bell_stories')||'[]');
+let atividades=JSON.parse(localStorage.getItem('bell_acts')||'[]');
+let follows=JSON.parse(localStorage.getItem('bell_follows')||'[]');
+
+function setTab(t){modo=t;document.getElementById('tabPhone').className=t=='phone'?'on':'';document.getElementById('tabEmail').className=t=='email'?'on':'';document.getElementById('boxPhone').style.display=t=='phone'?'block':'none';document.getElementById('boxEmail').style.display=t=='email'?'block':'none';}
+function loadFoto(file){let r=new FileReader();r.onload=e=>{fotoBase=e.target.result;let im=document.getElementById('prevAv');im.src=fotoBase;im.style.display='block';};r.readAsDataURL(file);}
+function loadEditFoto(file){let r=new FileReader();r.onload=e=>{editFotoBase=e.target.result;document.getElementById('editAvPrev').src=editFotoBase;};r.readAsDataURL(file);}
+function loadStoryFoto(file){let r=new FileReader();r.onload=e=>{storyFotoBase=e.target.result;let p=document.getElementById('editStoryPrev');p.src=storyFotoBase;p.style.display='block';};r.readAsDataURL(file);}
+
+document.getElementById('foto').addEventListener('change',e=>{if(e.target.files[0])loadFoto(e.target.files[0])});
+document.getElementById('editFoto').addEventListener('change',e=>{if(e.target.files[0])loadEditFoto(e.target.files[0])});
+document.getElementById('editStoryFoto').addEventListener('change',e=>{if(e.target.files[0])loadStoryFoto(e.target.files[0])});
+document.getElementById('btnCriar').addEventListener('click',criarConta);
+document.getElementById('btnRec').addEventListener('click',openRecup);
+document.getElementById('lupaIn').addEventListener('input',e=>doLupa(e.target.value));
+
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');document.querySelectorAll('.b-item').forEach(b=>b.classList.remove('on'));let el=document.getElementById('b-'+id);if(el)el.classList.add('on');if(id=='home')renderHome();if(id=='profile')renderProfile(viewingId?users.find(u=>u.id==viewingId):user);if(id=='relogio')renderRelogio();if(id=='msg')renderMsg();}
+function viewOwn(){viewingId=user?user.id:null;go('profile');}
+function openLupa(){document.getElementById('lupaModal').classList.add('show');}function closeLupa(){document.getElementById('lupaModal').classList.remove('show');}
+function openPub(){if(!user)return;document.getElementById('pubModal').classList.add('show');}function closePub(){document.getElementById('pubModal').classList.remove('show');}
+function openEdit(){document.getElementById('editModal').classList.add('show');document.getElementById('editNome').value=user.name;document.getElementById('editBio').value=user.bio||'';document.getElementById('editAvPrev').src=user.foto;editFotoBase=user.foto;}function closeEdit(){document.getElementById('editModal').classList.remove('show');}
+function openRecup(){document.getElementById('recModal').classList.add('show');}function closeRec(){document.getElementById('recModal').classList.remove('show');}
+function goStep2(){document.getElementById('step1').className='step';document.getElementById('step2').className='step on';}function goStep1(){document.getElementById('step2').className='step';document.getElementById('step1').className='step on';}
+function openStory(id){let s=stories.find(x=>x.id==id);if(!s)return;document.getElementById('storyImg').src=s.foto||s.userFoto;document.getElementById('storyUserFoto').src=s.userFoto;document.getElementById('storyUserNome').textContent=s.userName;document.getElementById('storyText').textContent=s.text||'';document.getElementById('storyModal').classList.add('show');}function closeStory(){document.getElementById('storyModal').classList.remove('show');}
+function openShare(id){shareId=id;let v=videos.find(x=>x.id==id);document.getElementById('shareText').textContent=v?`Partilhar: ${v.desc}`:'Partilhar';document.getElementById('shareModal').classList.add('show');}function closeShare(){document.getElementById('shareModal').classList.remove('show');}
+function copyLink(){let v=videos.find(x=>x.id==shareId);let link=`https://bellapp.com/video/${shareId}`;navigator.clipboard.writeText(link).then(()=>{alert('Link copiado!');closeShare();});}
+function shareWhats(){let link=`https://bellapp.com/video/${shareId}`;window.open(`https://wa.me/?text=${encodeURIComponent(link)}`,'_blank');}
+
+function criarConta(){
+ let nome=document.getElementById('nomeConta').value.trim();
+ let ph=document.getElementById('phone').value.replace(/\D/g,'');
+ let em=document.getElementById('email').value.trim().toLowerCase();
+ let pw=document.getElementById('pass').value;
+ let er=document.getElementById('err');
+ let cc=document.getElementById('cc').value;
+ er.style.display='none';
+ if(!nome){er.textContent='1º Escreve nome da conta';er.style.display='block';return;}
+ if(!fotoBase){er.textContent='Foto obrigatória';er.style.display='block';return;}
+ if(pw.length<6||!/\d/.test(pw)||!/[a-zA-Z]/.test(pw)){er.textContent='Senha letras+números min 6';er.style.display='block';return;}
+ let full='',idc='';
+ if(modo=='email'){
+  if(!em.includes('@')){er.textContent='Email inválido';er.style.display='block';return;}
+  full=em;idc=em;
+ }else{
+  if(ph.length<8){er.textContent='Número inválido';er.style.display='block';return;}
+  if(ph.includes(DONO)&&users.some(u=>(u.full||'').replace(/\D/g,'').includes(DONO))&&(!user||!user.owner)){er.textContent='⛔ 869116478 já é do dono';er.style.display='block';return;}
+  full=cc+' '+ph;idc=ph;
+ }
+ let novo={id:Date.now(),name:nome,full:full,idContato:idc,pass:pw,foto:fotoBase,owner:ph.includes(DONO),followers:ph.includes(DONO)?15000:80,following:120,bio:'',nomeChangedAt:Date.now()};
+ users=users.filter(u=>u.idContato!=idc);users.push(novo);localStorage.setItem('bell_users',JSON.stringify(users));user=novo;localStorage.setItem('bell_u',JSON.stringify(user));
+ document.getElementById('auth').style.display='none';
+ viewingId=user.id;renderProfile(user);renderHome();go('profile');
+}
+
+function saveEdit(){
+ let nn=document.getElementById('editNome').value.trim(),nb=document.getElementById('editBio').value.trim(),ns=document.getElementById('editStoryText').value.trim();
+ if(!nn)return;
+ let agora=Date.now(),ultimo=user.nomeChangedAt||0,tres=90*24*60*60*1000;
+ if(nn!==user.name&&agora-ultimo<tres){alert('Nome só muda a cada 3 meses. Faltam '+Math.ceil((tres-(agora-ultimo))/86400000)+' dias');return;}
+ if(nn!==user.name)user.nomeChangedAt=agora;
+ user.name=nn;user.bio=nb;if(editFotoBase)user.foto=editFotoBase;
+ users=users.map(u=>u.id==user.id?user:u);localStorage.setItem('bell_users',JSON.stringify(users));localStorage.setItem('bell_u',JSON.stringify(user));
+ videos=videos.map(v=>{if(v.ownerId==user.id){v.userName=user.name;v.userFoto=user.foto}return v});localStorage.setItem('bell

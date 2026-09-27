@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BellApp</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<style>
+body{margin:0;font-family:sans-serif;background:#111;color:white;display:flex;flex-direction:column;height:100vh}
+header{background:#7c3aed;padding:15px;text-align:center;font-weight:bold;font-size:20px}
+#chat{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
+.msg{background:#222;padding:10px 14px;border-radius:18px;max-width:80%}
+.me{background:#7c3aed;align-self:flex-end}
+footer{display:flex;padding:10px;background:#000;gap:10px}
+input{flex:1;padding:12px;border-radius:25px;border:none;outline:none}
+button{background:#7c3aed;color:white;border:none;padding:12px 20px;border-radius:25px;font-weight:bold}
+</style>
+</head>
+<body>
+<header>BellApp 🔔</header>
+<div id="chat"></div>
+<footer>
+<input id="txt" placeholder="Digite mensagem...">
+<button onclick="send()">Enviar</button>
+</footer>
+<script>
+let chat=document.getElementById('chat');
+let txt=document.getElementById('txt');
+function load(){let m=JSON.parse(localStorage.getItem('bell')||'[]');m.forEach(t=>add(t));}
+function add(t){let d=document.createElement('div');d.className='msg me';d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+function send(){if(!txt.value)return;add(txt.value);let m=JSON.parse(localStorage.getItem('bell')||'[]');m.push(txt.value);localStorage.setItem('bell',JSON.stringify(m));txt.value='';}
+load();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+</script>
+</body>
+  </html>
